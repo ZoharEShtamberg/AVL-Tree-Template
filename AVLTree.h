@@ -7,11 +7,7 @@ class AVLTree{
 				int height;
 				node * left;
 				node * right;
-				node(T k){
-					height = 1;
-					key = k;
-					left = NULL;
-					right = NULL;
+				node(T k):key(k),height(1),left(nullptr),right(nullptr){}
 				}
 		};
 		AVLTree():n(0),root(nullptr){}
@@ -44,6 +40,26 @@ class AVLTree{
 			destroy(head->right);
 			delete head;
 		}
+		node * insertUtil(node * head, T x){
+			if(head==nullptr){
+				n++;
+				return new node(x);
+			}
+			if(x < head->key){
+				head->left=insertUtil(head->left, x);
+			}
+			else if(x > head->key){
+				head->right=insertUtil(head->right, x);
+			}
+			int balance = height(head->left) - height(head->right);
+			if(balance ==2){
+				//stuff
+			}
+			else if(balance == -2){
+				//stuff
+			}
+		}
+			
 
 
 		
