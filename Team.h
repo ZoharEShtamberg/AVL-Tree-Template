@@ -6,4 +6,4 @@ class Team{
 	private:
 		int strength; //needs to be updated
 		Sport sport;
-}
+};

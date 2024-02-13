@@ -21,7 +21,7 @@ class Olympics_t
 		StatusType update_contestant_strength(int contestantId, int strength);
 		output_t<int> get_strength(int contestantId);
 		output_t<int> get_medals(int countryId);
-		output_t<int> get_team_stength(int teamId);
+		output_t<int> get_team_strength(int teamId);
 		StatusType unite_teams(int teamId1, int teamId2);
 		StatusType play_match(int teamId1, int teamId2);
 		output_t<int> austerity_measures(int teamId); 
@@ -30,4 +30,4 @@ class Olympics_t
 		AVL<Country> countries;
 		AVL<Contestant> contestants;
 		AVL<Team> teams;
-}
+};
