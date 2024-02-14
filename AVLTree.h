@@ -41,8 +41,9 @@ class AVLTree{
 		}
 		node * insertUtil(node * head, T x){
 			if(head==nullptr){
-				n++;
-				return new node(x);
+				node newNode = new node(x);
+				n++; //aloc error wont change n
+				return newNode;
 			}
 			if(x < head->key){
 				head->left=insertUtil(head->left, x);
