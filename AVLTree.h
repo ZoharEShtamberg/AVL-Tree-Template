@@ -8,9 +8,8 @@ class AVLTree{
 				node * left;
 				node * right;
 				node(T k):key(k),height(1),left(nullptr),right(nullptr){}
-				}
 		};
-		AVLTree():n(0),root(nullptr){}
+		AVLTree() : n(0), root(nullptr){}
 
 		~AVLTree(){
 			destroy(root);
@@ -34,7 +33,7 @@ class AVLTree{
 		int n; //number of nodes
 		node * root;
 
-		void destroy(node * head){
+		void destroy(node* head){
 			if(head==nullptr) return;
 			destroy(head->left);
 			destroy(head->right);
