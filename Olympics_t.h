@@ -1,3 +1,5 @@
+#ifndef OLYMPICS_T_H
+#define OLYMPICS_T_H
 #include "AVL.cpp"
 #include "Team.h"
 #include "Contestant.h"
@@ -31,3 +33,4 @@ class Olympics_t
 		AVL<Contestant> contestants;
 		AVL<Team> teams;
 };
+#endif

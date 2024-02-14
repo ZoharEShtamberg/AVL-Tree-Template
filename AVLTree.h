@@ -1,3 +1,5 @@
+#ifndef AVLTree_H
+#define AVLTree_H
 template<typename T>
 class AVLTree{
 	public:
@@ -64,3 +66,4 @@ class AVLTree{
 
 		
 };
+#endif
