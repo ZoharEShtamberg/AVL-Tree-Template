@@ -18,8 +18,8 @@ class Olympics_t
 		StatusType remove_team(int teamId);
 		StatusType add_contestant(int contestantId, int countryId, Sport sport, int strength);
 		StatusType remove_contestant(int contestantId);
-		StatusType add_contestant_to_team(int contestantId, int teamId);
-		StatusType remove_contestant_from_team( int teamId, int contestantId);
+		StatusType add_contestant_to_team(int teamId, int contestantId);
+		StatusType remove_contestant_from_team(int teamId, int contestantId);
 		StatusType update_contestant_strength(int contestantId, int strength);
 		output_t<int> get_strength(int contestantId);
 		output_t<int> get_medals(int countryId);
