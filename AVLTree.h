@@ -124,6 +124,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 				*head = *temp;
 			}
 			delete temp;
+		}
 		else {
 			node* temp = head->right;
 			while (temp->left != nullptr) {
@@ -132,7 +133,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 			head->key = temp->key;
 			head->right = removeUtil(head->right, temp->key);
 		}
-		}
+		head->height = 1 + max(height(head->left), height(head->right));
 		balanceTree(head, balanceFactor(head));
 		if (head == nullptr) {
 			return head;
