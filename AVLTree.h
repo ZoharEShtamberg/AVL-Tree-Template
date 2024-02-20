@@ -2,6 +2,10 @@
 #define AVLTree_H
 #include <cassert>
 
+#define LESS -1
+#define EQUAL 0
+#define GREATER 1
+
 inline int max(int a, int b) { //its better to use std::max
 	return a > b ? a : b;
 }
@@ -55,18 +59,18 @@ private:
 
 	//general utility functions
 	int height(node* head) const {
-		 return (head == nullptr) ? -1 : head->height;
+		return (head == nullptr) ? -1 : head->height;
 	}
-	int balanceFactor(node* head) const{
+	int balanceFactor(node* head) const {
 		return (head == nullptr) ? 0 : height(head->left) - height(head->right);
 	}
 	node* balanceTree(node* head, int balanceFactor);
 
-    // Roll Functions
-    node *rollLeftLeft(node *node);
-    node *rollLeftRight(node *node);
-    node *rollRightLeft(node *node);
-    node *rollRightRight(node *node);
+	// Roll Functions
+	node* rollLeftLeft(node* node);
+	node* rollLeftRight(node* node);
+	node* rollRightLeft(node* node);
+	node* rollRightRight(node* node);
 
 };
 //--------------recursive utility functions--------------//
@@ -77,11 +81,14 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::
 		n++; //aloc error wont change n
 		return newnode;
 	}
-	if (comp(key, head->key) = -1) {
+	if (comp(key, head->key) = LESS) {
 		head->left = insertUtil(head->left, key);
 	}
-	else if (comp(key, head->key) = 1) {
+	else if (comp(key, head->key) = GREATER) {
 		head->right = insertUtil(head->right, key);
+	}
+	else {
+		//key already exists, maybe throw an exception
 	}
 	head->height = 1 + max(height(head->left), height(head->right));
 	return balanceTree(head, balanceFactor(head));
@@ -89,18 +96,54 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::
 
 
 template<typename T, typename COMP>
-	void AVLTree<T, COMP>::destroy(AVLTree<T, COMP>::node* head) {
-		if (head == nullptr) return;
-		destroy(head->left);
-		destroy(head->right);
-		delete head;
-	}
+void AVLTree<T, COMP>::destroy(AVLTree<T, COMP>::node* head) {
+	if (head == nullptr) return;
+	destroy(head->left);
+	destroy(head->right);
+	delete head;
+}
 
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::node* head, T key) {
+	if (head == nullptr) return nullptr; //maybe throw an exception
+	if (comp(key, head->key) = LESS) {
+		head->left = removeUtil(head->left, key);
+	}
+	else if (comp(key, head->key) = GREATER) {
+		head->right = removeUtil(head->right, key);
+	}
+	else {
+		//key found
+		if (head->left == nullptr || head->right == nullptr) {
+			node* temp = head->left ? head->left : head->right;
+			if (temp == nullptr) {
+				temp = head;
+				head = nullptr;
+			}
+			else {
+				*head = *temp;
+			}
+			delete temp;
+		else {
+			node* temp = head->right;
+			while (temp->left != nullptr) {
+				temp = temp->left;
+			}
+			head->key = temp->key;
+			head->right = removeUtil(head->right, temp->key);
+		}
+		}
+		balanceTree(head, balanceFactor(head));
+		if (head == nullptr) {
+			return head;
+		}
+	}
+}
 //--------------general utility functions--------------//
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>::node* head, int balanceFactor) {
 	if (balanceFactor > 1) {
-		if(balanceFactor(head->left) > -1) {
+		if (balanceFactor(head->left) > -1) {
 			return rollLeftLeft(head);
 		}
 		else {
@@ -108,7 +151,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 		}
 	}
 	else if (balanceFactor < -1) {
-		if(balanceFactor(head->right) > -1) {
+		if (balanceFactor(head->right) > -1) {
 			return rollRightLeft(head);
 		}
 		else {
@@ -121,7 +164,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 //--------------Roll Functions--------------//
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftLeft(AVLTree<T, COMP>::node* head) {
-	assert(head!=nullptr&&head->left!=nullptr);
+	assert(head != nullptr && head->left != nullptr);
 	node* newHead = head->left;
 	head->left = newHead->right;
 	newHead->right = head;
@@ -131,7 +174,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftLeft(AVLTree<T, COMP>
 }
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightRight(AVLTree<T, COMP>::node* head) {
-	assert(head!=nullptr&&head->right!=nullptr);
+	assert(head != nullptr && head->right != nullptr);
 	node* newHead = head->right;
 	head->right = newHead->left;
 	newHead->left = head;
@@ -142,14 +185,14 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightRight(AVLTree<T, COM
 
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftRight(AVLTree<T, COMP>::node* head) {
-	assert(head!=nullptr&&head->left!=nullptr);
+	assert(head != nullptr && head->left != nullptr);
 	head->left = rollRightRight(head->left);
 	return rollLeftLeft(head);
 }
 
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightLeft(AVLTree<T, COMP>::node* head) {
-	assert(head!=nullptr&&head->right!=nullptr);
+	assert(head != nullptr && head->right != nullptr);
 	head->right = rollLeftLeft(head->right);
 	return rollRightRight(head);
 }
