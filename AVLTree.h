@@ -62,19 +62,19 @@ private:
 	node* balanceTree(node* head, int balanceFactor);
 
     // Roll Functions
-    Node *rollLeftLeft(Node *node);
-    Node *rollLeftRight(Node *node);
-    Node *rollRightLeft(Node *node);
-    Node *rollRightRight(Node *node);
+    node *rollLeftLeft(node *node);
+    node *rollLeftRight(node *node);
+    node *rollRightLeft(node *node);
+    node *rollRightRight(node *node);
 
 };
 //--------------recursive utility functions--------------//
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::node* head, T key) {
 	if (head == nullptr) {
-		node newNode = new node(key);
+		node newnode = new node(key);
 		n++; //aloc error wont change n
-		return newNode;
+		return newnode;
 	}
 	if (comp(key, head->key) = -1) {
 		head->left = insertUtil(head->left, key);
@@ -118,4 +118,37 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 }
 
 //--------------Roll Functions--------------//
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftLeft(AVLTree<T, COMP>::node* head) {
+	assert(head!=nullptr&&head->left!=nullptr);
+	node* newHead = head->left;
+	head->left = newHead->right;
+	newHead->right = head;
+	head->height = 1 + max(height(head->left), height(head->right));
+	newHead->height = 1 + max(height(newHead->left), height(newHead->right));
+	return newHead;
+}
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightRight(AVLTree<T, COMP>::node* head) {
+	node* newHead = head->right;
+	head->right = newHead->left;
+	newHead->left = head;
+	head->height = 1 + max(height(head->left), height(head->right));
+	newHead->height = 1 + max(height(newHead->left), height(newHead->right));
+	return newHead;
+}
+
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftRight(AVLTree<T, COMP>::node* head) {
+	head->left = rollRightRight(head->left);
+	return rollLeftLeft(head);
+}
+
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightLeft(AVLTree<T, COMP>::node* head) {
+	head->right = rollLeftLeft(head->right);
+	return rollRightRight(head);
+}
+
+template<typename T, typename COMP>
 #endif
