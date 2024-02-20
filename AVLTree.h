@@ -1,5 +1,6 @@
 #ifndef AVLTree_H
 #define AVLTree_H
+#include <cassert>
 
 inline int max(int a, int b) { //its better to use std::max
 	return a > b ? a : b;
@@ -130,6 +131,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftLeft(AVLTree<T, COMP>
 }
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightRight(AVLTree<T, COMP>::node* head) {
+	assert(head!=nullptr&&head->right!=nullptr);
 	node* newHead = head->right;
 	head->right = newHead->left;
 	newHead->left = head;
@@ -140,12 +142,14 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightRight(AVLTree<T, COM
 
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftRight(AVLTree<T, COMP>::node* head) {
+	assert(head!=nullptr&&head->left!=nullptr);
 	head->left = rollRightRight(head->left);
 	return rollLeftLeft(head);
 }
 
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightLeft(AVLTree<T, COMP>::node* head) {
+	assert(head!=nullptr&&head->right!=nullptr);
 	head->right = rollLeftLeft(head->right);
 	return rollRightRight(head);
 }
