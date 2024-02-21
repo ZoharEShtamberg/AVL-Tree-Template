@@ -1,0 +1,33 @@
+//
+// Created by Daniella on 21/02/2024.
+//
+#include "Country.h"
+
+void Country::add_player(int player_ID) {
+    num_of_players++;
+}
+
+void Country::remove_player(int player_ID) {
+    //todo check if exists?
+    num_of_players--;
+
+}
+
+int Country::get_ID() const {
+    return this->country_ID;
+}
+int Country::get_medals() const {
+    return this->num_of_medals;
+}
+
+void Country::add_medal() {
+    this->num_of_medals++;
+}
+
+int Country::get_num_of_players() const {
+    return this->num_of_players;
+}
+
+
+
+

@@ -16,13 +16,20 @@
 #define STREAMINGDBA1_H_
 
 #include "wet1util.h"
+#include "Team.h"
+#include "Country.h"
+
 
 class Olympics {
 private:
 	//
 	// Here you may add anything you want
 	//
-	
+    AVLTree<&Country, CountryComparator> O_countries;
+    AVLTree<&Contestant, ContestantIDComparator> O_contestants;
+    AVLTree<&Team, TeamComparator> O_teams;
+
+
 public:
 	// <DO-NOT-MODIFY> {
 	
