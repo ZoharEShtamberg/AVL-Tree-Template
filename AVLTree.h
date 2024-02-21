@@ -1,8 +1,10 @@
 #ifndef AVLTree_H
 #define AVLTree_H
 #include <cassert>
+#include "Exceptions.h"
 #ifndef NDEBUG
 #include <vector>
+#include <algorithm>
 #endif	//NDEBUG
 
 #define LESS -1
@@ -28,7 +30,7 @@ public:
 		node* right;
 		node(T k) :key(k), height(0), left(nullptr), right(nullptr) {}
 	};
-	AVLTree() : n(0), root(nullptr), comp() {}
+	AVLTree(): n(0), root(nullptr), comp() {}
 
 	~AVLTree() {
 		destroy(root);
@@ -56,6 +58,9 @@ public:
 
 	node* getMax() const {
 		node* temp = root;
+		if(temp==nullptr) {
+			throw EmptyTreeException();
+		}
 		while (temp->right != nullptr) {
 			temp = temp->right;
 		}
@@ -64,6 +69,9 @@ public:
 
 	node* getMin() const {
 		node* temp = root;
+		if(temp==nullptr) {
+			throw EmptyTreeException();
+		}
 		while (temp->left != nullptr) {
 			temp = temp->left;
 		}
@@ -73,7 +81,7 @@ public:
 	#ifndef NDEBUG //for testing purposes
 	bool isCorrect() {
 		std::vector<T> v = vectorizedTree();
-		return isBalanced() && std::is_sorted(v.begin(), v.end());
+		return isBalanced() && std::is_sorted(v.begin(), v.end())&& v.size()==n;
 	}
 	#endif	//NDEBUG
 
@@ -130,7 +138,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::
 		head->right = insertUtil(head->right, key);
 	}
 	else {
-		//key already exists, maybe throw an exception
+		throw KeyAlreadyExistsException();
 	}
 	head->height = 1 + max(height(head->left), height(head->right));
 	return balanceTree(head, balanceFactor(head));
@@ -147,7 +155,9 @@ void AVLTree<T, COMP>::destroy(AVLTree<T, COMP>::node* head) {
 
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::node* head, T key) {
-	if (head == nullptr) return nullptr; //maybe throw an exception
+	if (head == nullptr) {
+		throw KeyDoesNotExistException();
+	}
 	if (comp(key, head->key) == LESS) {
 		head->left = removeUtil(head->left, key);
 	}
@@ -166,6 +176,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 				*head = *temp;
 			}
 			delete temp;
+			n--;
 		}
 		else {  //node has two children
 			node* temp = head->right;
@@ -177,6 +188,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 		}
 	
 	}
+	
 	if(head!=nullptr){
 		head->height = 1 + max(height(head->left), height(head->right));
 		head = balanceTree(head, balanceFactor(head));
@@ -186,7 +198,9 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, T key) const {
-	if (head == nullptr) return nullptr;	
+	if (head == nullptr) {
+		throw KeyDoesNotExistException();
+	}	
 	if (comp(key, head->key) == LESS) {
 		return searchUtil(head->left, key);
 	}
@@ -199,8 +213,8 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::
 }
 //--------------general utility functions--------------//
 template<typename T, typename COMP>
-typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>::node* head, int balanceFactor) {
-	if (balanceFactor > 1) {
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>::node* head, int bf) {
+	if (bf > 1) {
 		if (balanceFactor(head->left) > -1) {
 			return rollLeftLeft(head);
 		}
@@ -208,7 +222,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 			return rollLeftRight(head);
 		}
 	}
-	else if (balanceFactor < -1) {
+	else if (bf < -1) {
 		if (balanceFactor(head->right) > -1) {
 			return rollRightLeft(head);
 		}
@@ -267,9 +281,9 @@ std::vector<T> AVLTree<T, COMP>::vectorizedTree() {
 template<typename T, typename COMP>
 void AVLTree<T, COMP>::inOrderUtil(std::vector<T>& result, typename AVLTree<T, COMP>::node* head) {
 	if (head == nullptr) return;
-	inOrderUtil(head->left, result);
+	inOrderUtil(result, head->left);
 	result.push_back(head->key);
-	inOrderUtil(head->right, result);
+	inOrderUtil(result, head->right);
 }
 
 template<typename T, typename COMP>
