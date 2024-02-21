@@ -28,7 +28,7 @@ public:
 		node* right;
 		node(T k) :key(k), height(0), left(nullptr), right(nullptr) {}
 	};
-	AVLTree(COMP comparator) : n(0), root(nullptr), comp(comparator) {}
+	AVLTree() : n(0), root(nullptr), comp() {}
 
 	~AVLTree() {
 		destroy(root);
@@ -69,12 +69,12 @@ public:
 		}
 		return temp;
 	}
-	#ifndef NDEBUG
-	std::vector<T> vectorizedTree();
-	void inOrderUtil(std::vector<T>& result,node* head);
-	bool isBalanced();
-	bool isBalancedUtil(node* head);
 
+	#ifndef NDEBUG //for testing purposes
+	bool isCorrect() {
+		std::vector<T> v = vectorizedTree();
+		return isBalanced() && std::is_sorted(v.begin(), v.end());
+	}
 	#endif	//NDEBUG
 
 
@@ -104,6 +104,15 @@ private:
 	node* rollLeftRight(node* node);
 	node* rollRightLeft(node* node);
 	node* rollRightRight(node* node);
+
+	//--------------for testing purposes--------------//
+	#ifndef NDEBUG
+	std::vector<T> vectorizedTree();
+	void inOrderUtil(std::vector<T>& result,node* head);
+	bool isBalanced();
+	bool isBalancedUtil(node* head);
+
+	#endif	//NDEBUG
 
 };
 //--------------recursive utility functions--------------//
