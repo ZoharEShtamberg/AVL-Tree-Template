@@ -1,6 +1,9 @@
 #ifndef AVLTree_H
 #define AVLTree_H
 #include <cassert>
+#ifndef NDEBUG
+#include <vector>
+#endif	//NDEBUG
 
 #define LESS -1
 #define EQUAL 0
@@ -43,6 +46,36 @@ public:
 		return searchUtil(root, x);
 	}
 
+	int size() const {
+		return n;
+	}
+
+	bool empty() const {
+		return n == 0;
+	}
+
+	node* getMax() const {
+		node* temp = root;
+		while (temp->right != nullptr) {
+			temp = temp->right;
+		}
+		return temp;
+	}
+
+	node* getMin() const {
+		node* temp = root;
+		while (temp->left != nullptr) {
+			temp = temp->left;
+		}
+		return temp;
+	}
+	#ifndef NDEBUG
+	std::vector<T> vectorizedTree();
+	void inOrderUtil(std::vector<T>& result,node* head);
+	bool isBalanced();
+	bool isBalancedUtil(node* head);
+
+	#endif	//NDEBUG
 
 
 private:
@@ -77,7 +110,7 @@ private:
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::node* head, T key) {
 	if (head == nullptr) {
-		node newnode = new node(key);
+		node*  newnode = new node(key);
 		n++; //aloc error wont change n
 		return newnode;
 	}
@@ -114,18 +147,18 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 	}
 	else {
 		//key found
-		if (head->left == nullptr || head->right == nullptr) {
-			node* temp = head->left ? head->left : head->right;
-			if (temp == nullptr) {
+		if (head->left == nullptr || head->right == nullptr) {	//node has one or no children
+			node* temp = (head->left != nullptr) ? head->left : head->right;
+			if (temp == nullptr) { 		//node has no children
 				temp = head;
 				head = nullptr;
 			}
-			else {
+			else {	//node has one child
 				*head = *temp;
 			}
 			delete temp;
 		}
-		else {
+		else {  //node has two children
 			node* temp = head->right;
 			while (temp->left != nullptr) {
 				temp = temp->left;
@@ -133,11 +166,26 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 			head->key = temp->key;
 			head->right = removeUtil(head->right, temp->key);
 		}
+	
+	}
+	if(head!=nullptr){
 		head->height = 1 + max(height(head->left), height(head->right));
-		balanceTree(head, balanceFactor(head));
-		if (head == nullptr) {
-			return head;
-		}
+		head = balanceTree(head, balanceFactor(head));
+	}
+	return head;
+}
+
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, T key) const {
+	if (head == nullptr) return nullptr;	
+	if (comp(key, head->key) == LESS) {
+		return searchUtil(head->left, key);
+	}
+	else if (comp(key, head->key) == GREATER) {
+		return searchUtil(head->right, key);
+	}
+	else {
+		return head;
 	}
 }
 //--------------general utility functions--------------//
@@ -197,6 +245,36 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightLeft(AVLTree<T, COMP
 	head->right = rollLeftLeft(head->right);
 	return rollRightRight(head);
 }
+#ifndef NDEBUG
+//--------------for testing purposes--------------//
 
 template<typename T, typename COMP>
-#endif
+std::vector<T> AVLTree<T, COMP>::vectorizedTree() {
+	std::vector<T> result;
+	inOrderUtil(result, root);
+	return result;
+}
+
+template<typename T, typename COMP>
+void AVLTree<T, COMP>::inOrderUtil(std::vector<T>& result, typename AVLTree<T, COMP>::node* head) {
+	if (head == nullptr) return;
+	inOrderUtil(head->left, result);
+	result.push_back(head->key);
+	inOrderUtil(head->right, result);
+}
+
+template<typename T, typename COMP>
+bool AVLTree<T, COMP>::isBalanced() {
+	return isBalancedUtil(root);
+}
+
+template<typename T, typename COMP>
+bool AVLTree<T, COMP>::isBalancedUtil(typename AVLTree<T, COMP>::node* head) {
+	if (head == nullptr) return true;
+	int bf = balanceFactor(head);
+	if (bf > 1 || bf < -1) return false;
+	return isBalancedUtil(head->left) && isBalancedUtil(head->right);
+}
+#endif	//NDEBUG
+
+#endif // !AVLTree_H
