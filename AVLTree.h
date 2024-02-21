@@ -40,7 +40,7 @@ public:
 	}
 
 	node* search(T x) {// do i want to return the node or the key?
-		return searchUtil(root, x)->key;
+		return searchUtil(root, x);
 	}
 
 
@@ -81,10 +81,10 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::
 		n++; //aloc error wont change n
 		return newnode;
 	}
-	if (comp(key, head->key) = LESS) {
+	if (comp(key, head->key) == LESS) {
 		head->left = insertUtil(head->left, key);
 	}
-	else if (comp(key, head->key) = GREATER) {
+	else if (comp(key, head->key) == GREATER) {
 		head->right = insertUtil(head->right, key);
 	}
 	else {
@@ -106,10 +106,10 @@ void AVLTree<T, COMP>::destroy(AVLTree<T, COMP>::node* head) {
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::node* head, T key) {
 	if (head == nullptr) return nullptr; //maybe throw an exception
-	if (comp(key, head->key) = LESS) {
+	if (comp(key, head->key) == LESS) {
 		head->left = removeUtil(head->left, key);
 	}
-	else if (comp(key, head->key) = GREATER) {
+	else if (comp(key, head->key) == GREATER) {
 		head->right = removeUtil(head->right, key);
 	}
 	else {
