@@ -12,7 +12,6 @@ Olympics::~Olympics(){
 }
 	
 StatusType Olympics::add_country(int countryId, int medals){
-    this->
 	return StatusType::FAILURE;
 }
 	

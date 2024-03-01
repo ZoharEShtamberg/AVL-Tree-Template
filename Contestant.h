@@ -32,32 +32,28 @@ public:
 
 class ContestantIDComparator{
 public:
-    int operator()(Contestant &a, Contestant &b){
-    if (a.get_ID()<b.get_ID()){
-        return LESS;
-    }
-    if (a.get_ID()>b.get_ID()){
-        return GREATER;
-    }
-    return EQUAL;
-}
-    int operator()(Contestant &a,int b){
-        if (a.get_ID()<b){
+    int operator()(Contestant* a, Contestant* b){
+        if (a->get_ID() < b->get_ID()){
             return LESS;
         }
-        if (a.get_ID()>b){
+        if (a->get_ID() > b->get_ID()){
             return GREATER;
         }
         return EQUAL;
     }
-    int operator()(int a, Contestant &b){
-        if (a<b.get_ID()){
+
+    int operator()(Contestant* a, int b){
+        if (a->get_ID() < b){
             return LESS;
         }
-        if (a>b.get_ID()){
+        if (a->get_ID() > b){
             return GREATER;
         }
         return EQUAL;
+    }
+
+    int operator()(int a, Contestant* b){
+        return this->operator()(b, a);
     }
 
 };
@@ -66,31 +62,16 @@ public:
 class ContestantStrengthComparator{
 public:
     int operator()(Contestant &a, Contestant &b){
-        if (a.get_strength()<b.get_strength()){
-            return LESS;
+        if (a.get_strength()==b.get_strength()){
+            if(a.get_ID()==b.get_ID()){
+                return EQUAL;
+            }
+            return a.get_ID()<b.get_ID() ? LESS : GREATER;
         }
         if (a.get_strength()>b.get_strength()){
             return GREATER;
         }
-        return EQUAL;
-    }
-    int operator()(Contestant &a, int b){
-        if (a.get_strength()<b){
-            return LESS;
-        }
-        if (a.get_strength()>b){
-            return GREATER;
-        }
-        return EQUAL;
-    }
-    int operator()(int a, Contestant &b){
-        if (a<b.get_strength()){
-            return LESS;
-        }
-        if (a>b.get_strength()){
-            return GREATER;
-        }
-        return EQUAL;
+        return LESS;
     }
 };
 
