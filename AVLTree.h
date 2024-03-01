@@ -43,8 +43,8 @@ public:
 	void remove(T x) {
 		root = removeUtil(root, x);
 	}
-
-	node* search(T x) {// do i want to return the node or the key?
+	template <typename K>
+	node* search(K x) {// do i want to return the node or the key?
 		return searchUtil(root, x);
 	}
 
@@ -95,7 +95,8 @@ private:
 	//recursive utility functions
 	node* insertUtil(node* head, T key);
 	node* removeUtil(node* head, T key);
-	node* searchUtil(node* head, T key) const;
+	template <typename K>
+	node* searchUtil(node* head, K key) const;
 	void destroy(node* head);
 
 	//general utility functions
@@ -197,7 +198,8 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 }
 
 template<typename T, typename COMP>
-typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, T key) const {
+template<typename K>
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
 	if (head == nullptr) {
 		throw KeyDoesNotExistException();
 	}	
