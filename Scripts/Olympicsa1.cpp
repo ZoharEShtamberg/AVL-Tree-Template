@@ -36,12 +36,60 @@ StatusType Olympics::remove_contestant(int contestantId){
 }
 	
 StatusType Olympics::add_contestant_to_team(int teamId,int contestantId){
-	return StatusType::FAILURE;
+    /**
+     try {
+     if (teamId<=0 || contestantId<=0){
+         return StatusType::INVALID_INPUT;
+     }
+     Contestant* contestant=O_contestants.search(contestantId)->key; //TODO has to return data
+     Team* team=O_teams.search(teamId)->key;
+    if (contestant->get_sport()!=team->get_sport() ||
+         contestant->get_country_ID()!=team->get_country_ID()||
+         contestant->is_in_team(teamId) ||
+         !contestant->is_available()){
+        return StatusType::FAILURE;
+    }
+    team->add_player(contestant);
+    contestant->add_to_team(teamId);
+    }
+     catch (KeyDoesNotExistException&){
+        return StatusType::FAILURE;
+     }
+     catch (KeyAlreadyExistsException&){
+        return StatusType::FAILURE;
+     }
+     catch (std::bad_alloc){
+         return StatusType::ALLOCATION_ERROR;
+     }
+
+     **/
+     return StatusType::SUCCESS;
 }
 
 StatusType Olympics::remove_contestant_from_team(int teamId,int contestantId){
-	return StatusType::FAILURE;
+    /**
+     try {
+        if (teamId <= 0 || contestantId <= 0) {
+            return StatusType::INVALID_INPUT;
+        }
+        Contestant* contestant=O_contestants.search(contestantId)->key; //TODO has to return data
+        Team* team=O_teams.search(teamId)->key;
+        if (!contestant->is_in_team(teamId)){
+            return StatusType::FAILURE;
+        }
+        team->remove_player(contestant);
+        contestant->remove_from_team(teamId);
+    }
+    catch (KeyDoesNotExistException&){
+        return StatusType::FAILURE;
+    }
+    catch (KeyAlreadyExistsException&){
+        return StatusType::FAILURE;
+    }
+     **/
+    return StatusType::SUCCESS;
 }
+
 
 StatusType Olympics::update_contestant_strength(int contestantId ,int change){
 	return StatusType::FAILURE;

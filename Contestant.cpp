@@ -7,6 +7,10 @@ int Contestant::get_strength() const {
     return this->strength;
 }
 
+void Contestant::set_strength(int input) {
+    this->strength=input;
+}
+
 int Contestant::get_ID() const {
     return this->contestant_ID;
 }
