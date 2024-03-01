@@ -44,7 +44,7 @@ public:
 		root = removeUtil(root, x);
 	}
 	template <typename K>
-	node* search(K x) {// do i want to return the node or the key?
+	node* search(K x) const{// do i want to return the node or the key?
 		return searchUtil(root, x);
 	}
 
