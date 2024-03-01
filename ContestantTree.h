@@ -4,8 +4,7 @@
 
 #ifndef DS_HW1_CONTESTANTTREE_H
 #define DS_HW1_CONTESTANTTREE_H
-#include "AVLTree.h"
-#include "Contestant.h"
+#include "Do
 
 class ContestantTree {
 private:
