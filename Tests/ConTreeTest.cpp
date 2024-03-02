@@ -72,7 +72,7 @@ bool getStrength1(){
     try{
         Team team1=Team(1,1,Sport::SWIMMING);
         int conts[9]={102 ,101 ,100 ,20 ,16 ,10 ,6 ,4 ,1};
-        int powers[9]={4 ,6 ,7 ,11,15 ,10 ,3 ,5 ,2};
+        int powers[9]={4 ,6 ,7 ,15,11 ,10 ,3 ,5 ,2};
         Contestant *contestants[9];
         for (int i = 0; i < 9; ++i) {
             contestants[i]=new Contestant(conts[i],1,Sport::SWIMMING, powers[i]);

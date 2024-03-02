@@ -40,13 +40,33 @@ int ContestantTree::get_austerity() const {
 }
 
 void ContestantTree::insert(Contestant* contestant) {
+    if (size<=2){
+        mid_group.insert(contestant);
+        size++;
+        balance();
+        return;
+    }
     int id=contestant->get_ID();
+    Contestant *temp_con;
     if (high_group.isInById(id) ||
            mid_group.isInById(id) ||
            low_group.isInById(id)){
         throw KeyAlreadyExistsException();
     }
-    mid_group.insert(contestant);
+    int contestant_strength=contestant->get_strength();
+    if (contestant_strength<mid_group.getMinById()->get_ID()){
+        low_group.insert(contestant);
+        temp_con=low_group.getMaxById();
+        mid_group.insert(temp_con);
+        low_group.remove(temp_con);
+    } else if(contestant_strength>mid_group.getMaxById()->get_ID()){
+        high_group.insert(contestant);
+        temp_con=high_group.getMinById();
+        high_group.remove(temp_con);
+        mid_group.insert(temp_con);
+    } else{
+        mid_group.insert(contestant) ;
+    }
     size++;
     balance();
 }
