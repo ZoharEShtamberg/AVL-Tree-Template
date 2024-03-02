@@ -2,6 +2,7 @@
 #define AVLTree_H
 #include <cassert>
 #include "Exceptions.h"
+#include "StupidArr.h"
 #ifndef NDEBUG
 #include <vector>
 #include <algorithm>
@@ -14,6 +15,7 @@
 inline int max(int a, int b) { //its better to use std::max
 	return a > b ? a : b;
 }
+
 //COMP should overload the () operator to compare two Ts
 //COMP (T,T) -> int
 //Comp(a,b)=-1 if a < b
@@ -30,7 +32,7 @@ public:
 		node* right;
 		node(T k) :key(k), height(0), left(nullptr), right(nullptr) {}
 	};
-	AVLTree(): n(0), root(nullptr), comp() {}
+	AVLTree() : n(0), root(nullptr), comp() {}
 
 	~AVLTree() {
 		destroy(root);
@@ -44,8 +46,18 @@ public:
 		root = removeUtil(root, x);
 	}
 	template <typename K>
-	node* search(K x) const{// do i want to return the node or the key?
+	T& search(K x) const {// do i want to return the node or the key?
 		return searchUtil(root, x);
+	}
+
+	bool find(T x) const {
+		try {
+			search(x);
+			return true;
+		}
+		catch (KeyDoesNotExistException&) {
+			return false;
+		}
 	}
 
 	int size() const {
@@ -58,7 +70,7 @@ public:
 
 	node* getMax() const {
 		node* temp = root;
-		if(temp==nullptr) {
+		if (temp == nullptr) {
 			throw EmptyTreeException();
 		}
 		while (temp->right != nullptr) {
@@ -69,7 +81,7 @@ public:
 
 	node* getMin() const {
 		node* temp = root;
-		if(temp==nullptr) {
+		if (temp == nullptr) {
 			throw EmptyTreeException();
 		}
 		while (temp->left != nullptr) {
@@ -78,12 +90,24 @@ public:
 		return temp;
 	}
 
-	#ifndef NDEBUG //for testing purposes
+	StupidArr<T> treeToArray() const {
+		StupidArr<T> result(n);
+		treeToArrayUtil(root, result->arr);
+		return result;
+	}
+
+	void unite(AVLTree<T, COMP>& other) {
+		StupidArr<T> mergedArr = mergeArrays(treeToArray(), other.treeToArray());
+		node* newRoot = createFullTree(std::ceil(std::log2(mergedArr.size)));
+		//insert the merged array into the tree
+
+	}
+#ifndef NDEBUG //for testing purposes
 	bool isCorrect() {
 		std::vector<T> v = vectorizedTree();
-		return isBalanced() && std::is_sorted(v.begin(), v.end())&& v.size()==n;
+		return isBalanced() && std::is_sorted(v.begin(), v.end()) && v.size() == n;
 	}
-	#endif	//NDEBUG
+#endif	//NDEBUG
 
 
 private:
@@ -96,8 +120,10 @@ private:
 	node* insertUtil(node* head, T key);
 	node* removeUtil(node* head, T key);
 	template <typename K>
-	node* searchUtil(node* head, K key) const;
+	T& searchUtil(node* head, K key) const;
 	void destroy(node* head);
+	T* treeToArrayUtil(node* head, T* result);
+	node* createFullTree(int height);
 
 	//general utility functions
 	int height(node* head) const {
@@ -115,21 +141,21 @@ private:
 	node* rollRightRight(node* node);
 
 	//--------------for testing purposes--------------//
-	#ifndef NDEBUG
+#ifndef NDEBUG
 	std::vector<T> vectorizedTree();
-	void inOrderUtil(std::vector<T>& result,node* head);
+	void inOrderUtil_test(std::vector<T>& result, node* head);
 	bool isBalanced();
 	bool isBalancedUtil(node* head);
 
-	#endif	//NDEBUG
+#endif	//NDEBUG
 
 };
 //--------------recursive utility functions--------------//
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::node* head, T key) {
 	if (head == nullptr) {
-		node*  newnode = new node(key);
-		n++; //aloc error wont change n
+		node* newnode = new node(key);
+		n++; //alloc error wont change n
 		return newnode;
 	}
 	if (comp(key, head->key) == LESS) {
@@ -187,10 +213,10 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 			head->key = temp->key;
 			head->right = removeUtil(head->right, temp->key);
 		}
-	
+
 	}
-	
-	if(head!=nullptr){
+
+	if (head != nullptr) {
 		head->height = 1 + max(height(head->left), height(head->right));
 		head = balanceTree(head, balanceFactor(head));
 	}
@@ -199,10 +225,10 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 
 template<typename T, typename COMP>
 template<typename K>
-typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
+T& AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
 	if (head == nullptr) {
 		throw KeyDoesNotExistException();
-	}	
+	}
 	if (comp(key, head->key) == LESS) {
 		return searchUtil(head->left, key);
 	}
@@ -210,8 +236,25 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::
 		return searchUtil(head->right, key);
 	}
 	else {
-		return head;
+		return head->key;
 	}
+}
+template<typename T, typename COMP>
+T* AVLTree<T, COMP>::treeToArrayUtil(AVLTree<T, COMP>::node* head, T* result) {
+	if (head == nullptr) return result;
+	result = treeToArrayUtil(head->left, result);
+	*result = head->key;
+	result++;
+	result = treeToArrayUtil(head->right, result);
+	return result;
+}
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* createFullTree(int height) {
+	if (height == -1) return nullptr;
+	node* head = new node(0);
+	head->left = createFullTree(height - 1);
+	head->right = createFullTree(height - 1);
+	return head;
 }
 //--------------general utility functions--------------//
 template<typename T, typename COMP>
@@ -235,6 +278,38 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 	return head;
 }
 
+template<typename T>
+StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2){	//TODO: make it work with comp
+	T* result = new T[size1 + size2];
+	int index1 = 0, index2 = 0, resultIndex = 0;
+	while (index1 < size1 && index2 < size2) {
+		if (arr1[index1] < arr2[index2]) {
+			result[resultIndex] = arr1[index1];
+			index1++;
+		}
+		else if (arr1[index1] > arr2[index2]) {
+			result[resultIndex] = arr2[index2];
+			index2++;
+		}
+		else {	//means we need to remove the duplicate
+			result[resultIndex] = arr1[index1];
+			index1++;
+			index2++;
+		}
+		resultIndex++;
+	}
+	while (index1 < size1) {
+		result[resultIndex] = arr1[index1];
+		index1++;
+		resultIndex++;
+	}
+	while (index2 < size2) {
+		result[resultIndex] = arr2[index2];
+		index2++;
+		resultIndex++;
+	}
+	return StupidArr<T>(result, resultIndex);
+}
 //--------------Roll Functions--------------//
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollLeftLeft(AVLTree<T, COMP>::node* head) {
@@ -270,22 +345,23 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::rollRightLeft(AVLTree<T, COMP
 	head->right = rollLeftLeft(head->right);
 	return rollRightRight(head);
 }
+
 #ifndef NDEBUG
 //--------------for testing purposes--------------//
 
 template<typename T, typename COMP>
 std::vector<T> AVLTree<T, COMP>::vectorizedTree() {
 	std::vector<T> result;
-	inOrderUtil(result, root);
+	inOrderUtil_test(result, root);
 	return result;
 }
 
 template<typename T, typename COMP>
-void AVLTree<T, COMP>::inOrderUtil(std::vector<T>& result, typename AVLTree<T, COMP>::node* head) {
+void AVLTree<T, COMP>::inOrderUtil_test(std::vector<T>& result, typename AVLTree<T, COMP>::node* head) {
 	if (head == nullptr) return;
-	inOrderUtil(result, head->left);
+	inOrderUtil_test(result, head->left);
 	result.push_back(head->key);
-	inOrderUtil(result, head->right);
+	inOrderUtil_test(result, head->right);
 }
 
 template<typename T, typename COMP>
@@ -300,6 +376,5 @@ bool AVLTree<T, COMP>::isBalancedUtil(typename AVLTree<T, COMP>::node* head) {
 	if (bf > 1 || bf < -1) return false;
 	return isBalancedUtil(head->left) && isBalancedUtil(head->right);
 }
-#endif	//NDEBUG
-
+#endif  //NDEBUG
 #endif // !AVLTree_H
