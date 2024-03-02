@@ -20,29 +20,29 @@ public:
 
 class CountryComparator {
 public:
-    int operator()(Country &a, Country &b){
-        if (a.get_ID()<b.get_ID()){
+    int operator()(Country *a, Country *b) const{
+        if (a->get_ID()<b->get_ID()){
             return LESS;
         }
-        if (a.get_ID()>b.get_ID()){
+        if (a->get_ID()>b->get_ID()){
             return GREATER;
         }
         return EQUAL;
     }
-    int operator()(int a, Country &b){
-        if (a<b.get_ID()){
+    int operator()(int a, Country *b) const{
+        if (a<b->get_ID()){
             return LESS;
         }
-        if (a>b.get_ID()){
+        if (a>b->get_ID()){
             return GREATER;
         }
         return EQUAL;
     }
-    int operator()(Country &a,int b){
-        if (a.get_ID()<b){
+    int operator()(Country *a,int b) const{
+        if (a->get_ID()<b){
             return LESS;
         }
-        if (a.get_ID()>b){
+        if (a->get_ID()>b){
             return GREATER;
         }
         return EQUAL;

@@ -41,8 +41,8 @@ StatusType Olympics::add_contestant_to_team(int teamId,int contestantId){
      if (teamId<=0 || contestantId<=0){
          return StatusType::INVALID_INPUT;
      }
-     Contestant* contestant=O_contestants.search(contestantId)->key; //TODO has to return data
-     Team* team=O_teams.search(teamId)->key;
+     Contestant* contestant=O_contestants.search(contestantId); //TODO has to return data
+     Team* team=O_teams.search(teamId);
     if (contestant->get_sport()!=team->get_sport() ||
          contestant->get_country_ID()!=team->get_country_ID()||
          contestant->is_in_team(teamId) ||

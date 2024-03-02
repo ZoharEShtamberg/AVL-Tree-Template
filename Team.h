@@ -24,16 +24,16 @@ public:
 
 class TeamComparator {
 public:
-    int operator()(Team* a, Team* b){
+    int operator()(Team* a, Team* b) const{
         if (a->get_ID() < b->get_ID()){
             return LESS;
         }
-        if (a->get_ID() > b->get_ID()){
+        if (a->get_ID() > b->get_ID()) {
             return GREATER;
         }
         return EQUAL;
     }
-    int operator()(int a, Team* b){
+    int operator()(int a, Team* b) const{
         if (a < b->get_ID()){
             return LESS;
         }
@@ -42,7 +42,7 @@ public:
         }
         return EQUAL;
     }
-    int operator()(Team* a, int b){
+    int operator()(Team* a, int b) const{
         return this->operator()(b, a);
     }
 };

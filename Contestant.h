@@ -33,7 +33,7 @@ public:
 
 class ContestantIDComparator{
 public:
-    int operator()(Contestant* a, Contestant* b){
+    int operator()(Contestant* a, Contestant* b) const{
         if (a->get_ID() < b->get_ID()){
             return LESS;
         }
@@ -43,7 +43,7 @@ public:
         return EQUAL;
     }
 
-    int operator()(Contestant* a, const int b){
+    int operator()(Contestant* a, const int b) const{
         if (a->get_ID() < b){
             return LESS;
         }
@@ -53,7 +53,7 @@ public:
         return EQUAL;
     }
 
-    int operator()(const int a, Contestant* b){
+    int operator()(const int a, Contestant* b) const{
         return this->operator()(b, a);
     }
 
@@ -62,7 +62,7 @@ public:
 
 class ContestantStrengthComparator{
 public:
-    int operator()(Contestant *a, Contestant *b){
+    int operator()(Contestant *a, Contestant *b) const{
         if (a->get_strength()==b->get_strength()){
             if(a->get_ID()==b->get_ID()){
                 return EQUAL;
