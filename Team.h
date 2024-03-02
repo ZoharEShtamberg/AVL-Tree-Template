@@ -6,21 +6,19 @@ private:
     const int team_ID;
     const int countryId;
     Sport team_sport;
-    int strength; //needs to be updated
-    int austerity;
     ContestantTree contestants;
 public:
-    explicit Team(int id, int country, Sport sport) :team_ID(id),
-                                                     countryId(country),
-                                                     team_sport(sport),
-                                                     strength(0),
-                                                     austerity(0){};
+    explicit Team(int id, int country, Sport sport) :team_ID(id), countryId(country),team_sport(sport){};
     ~Team()=default;
     int get_ID() const;
-    int get_num_of_players() const;
-    bool add_player();
-    bool remove_player();
-    //TODO: insert,remove (from tree and update player
+    int size() const;
+    Sport get_sport() const;
+    void add_player(Contestant* contestant);
+    void remove_player(Contestant* contestant);
+    int get_country_ID() const;
+    int austerity();
+    int strength();
+    bool unite(Team* team);
 
 };
 

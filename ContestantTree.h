@@ -4,28 +4,29 @@
 
 #ifndef DS_HW1_CONTESTANTTREE_H
 #define DS_HW1_CONTESTANTTREE_H
-#include "AVLTree.h"
-#include "Contestant.h"
+#include "DoubleTree.h"
 
 class ContestantTree {
 private:
-    AVLTree<Contestant,ContestantIDComparator> high_group;
-    AVLTree<Contestant,ContestantIDComparator> mid_group;
-    AVLTree<Contestant,ContestantIDComparator> low_group;
-    AVLTree<Contestant,ContestantStrengthComparator> high_group_strength;
-    AVLTree<Contestant,ContestantStrengthComparator> mid_group_strength;
-    AVLTree<Contestant,ContestantStrengthComparator> low_group_strength;
+    DoubleTree high_group, mid_group, low_group;
     int size;
-    int austerity_measure;
+    int austerity;
     int strength;
+    void balance();
     void update_strength();
-    void update_austerity();
+    void update_austerity(); //TODO
+    void remove_from_high(Contestant* contestant);
+    void remove_from_mid(Contestant* contestant);
+    void remove_from_low(Contestant* contestant);
 public:
-    ContestantTree():size(0), austerity_measure(0), strength(0){};
+    ContestantTree():size(0), austerity(0), strength(0){};
     ~ContestantTree()=default;
-    bool insert(int contestand_ID);
-    bool remove(int contestand_ID);
+    void insert(Contestant* contestant); //assumes not in team
+    void remove(Contestant* contestant); //assumes in team
     int get_size() const;
+    int get_austerity() const;
+    int get_strength() const;
+
 };
 
 

@@ -21,6 +21,7 @@ public:
     };
     int get_ID() const;
     int get_strength() const;
+    void set_strength(int input);
     int get_country_ID() const;
     Sport get_sport() const;
     bool add_to_team(int team);//change type
@@ -42,7 +43,7 @@ public:
         return EQUAL;
     }
 
-    int operator()(Contestant* a, int b){
+    int operator()(Contestant* a, const int b){
         if (a->get_ID() < b){
             return LESS;
         }
@@ -52,7 +53,7 @@ public:
         return EQUAL;
     }
 
-    int operator()(int a, Contestant* b){
+    int operator()(const int a, Contestant* b){
         return this->operator()(b, a);
     }
 
@@ -61,14 +62,14 @@ public:
 
 class ContestantStrengthComparator{
 public:
-    int operator()(Contestant &a, Contestant &b){
-        if (a.get_strength()==b.get_strength()){
-            if(a.get_ID()==b.get_ID()){
+    int operator()(Contestant *a, Contestant *b){
+        if (a->get_strength()==b->get_strength()){
+            if(a->get_ID()==b->get_ID()){
                 return EQUAL;
             }
-            return a.get_ID()<b.get_ID() ? LESS : GREATER;
+            return a->get_ID()<b->get_ID() ? LESS : GREATER;
         }
-        if (a.get_strength()>b.get_strength()){
+        if (a->get_strength()>b->get_strength()){
             return GREATER;
         }
         return LESS;
