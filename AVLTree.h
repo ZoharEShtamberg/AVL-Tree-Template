@@ -2,6 +2,7 @@
 #define AVLTree_H
 #include <cassert>
 #include "Exceptions.h"
+#include "StupidArr.h"
 #ifndef NDEBUG
 #include <vector>
 #include <algorithm>
@@ -79,17 +80,15 @@ public:
 		return temp;
 	}
 
-	T* treeToArray() const {	//returns a sorted array that you should delete after using!!
-		T* result = new T[n];
-		treeToArrayUtil(root, result);
+	StupidArr<T> treeToArray() const {
+		StupidArr<T> result(n);
+		treeToArrayUtil(root, result->arr);
 		return result;
 	}
 
 	void unite(AVLTree<T, COMP>& other) {
-		T* otherArr = other.treeToArray();
-		T* thisArr = treeToArray();
-		//merge the two arrays and remove duplicates, keep count of the number of elements
-		//create empty tree
+		StupidArr<T> mergedArr = mergeArrays(treeToArray(), other.treeToArray());
+		node* newRoot = createFullTree(std::ceil(std::log2(mergedArr.size)));
 		//insert the merged array into the tree
 
 	}
@@ -114,6 +113,7 @@ private:
 	node* searchUtil(node* head, K key) const;
 	void destroy(node* head);
 	T* treeToArrayUtil(node* head, T* result);
+	node* createFullTree(int height);
 
 	//general utility functions
 	int height(node* head) const {
@@ -145,7 +145,7 @@ template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::node* head, T key) {
 	if (head == nullptr) {
 		node* newnode = new node(key);
-		n++; //aloc error wont change n
+		n++; //alloc error wont change n
 		return newnode;
 	}
 	if (comp(key, head->key) == LESS) {
@@ -231,12 +231,20 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::
 }
 template<typename T, typename COMP>
 T* AVLTree<T, COMP>::treeToArrayUtil(AVLTree<T, COMP>::node* head, T* result) {
-	if (head == nullptr) return;
+	if (head == nullptr) return result;
 	result = treeToArrayUtil(head->left, result);
 	*result = head->key;
 	result++;
 	result = treeToArrayUtil(head->right, result);
 	return result;
+}
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::node* createFullTree(int height) {
+	if (height == -1) return nullptr;
+	node* head = new node(0);
+	head->left = createFullTree(height - 1);
+	head->right = createFullTree(height - 1);
+	return head;
 }
 //--------------general utility functions--------------//
 template<typename T, typename COMP>
@@ -261,7 +269,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 }
 
 template<typename T>
-T* mergeArrays(T* arr1, int size1, T* arr2, int size2){
+StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2){
 	T* result = new T[size1 + size2];
 	int index1 = 0, index2 = 0, resultIndex = 0;
 	while (index1 < size1 && index2 < size2) {
@@ -290,7 +298,7 @@ T* mergeArrays(T* arr1, int size1, T* arr2, int size2){
 		index2++;
 		resultIndex++;
 	}
-	return result;
+	return StupidArr<T>(result, resultIndex);
 }
 //--------------Roll Functions--------------//
 template<typename T, typename COMP>
