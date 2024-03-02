@@ -3,12 +3,11 @@
 //
 #include "Country.h"
 
-void Country::add_player(int player_ID) {
+void Country::add_player() {
     num_of_players++;
 }
 
-void Country::remove_player(int player_ID) {
-    //todo check if exists?
+void Country::remove_player() {
     num_of_players--;
 
 }

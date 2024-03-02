@@ -37,22 +37,22 @@ int ContestantTree::get_austerity() const {
 
 void ContestantTree::insert(Contestant* contestant) {
     int id=contestant->get_ID();
-    assert(high_group.searchById(id)!= NULL ||
-           mid_group.searchById(id)!= NULL ||
-           low_group.searchById(id)!= NULL); //TODO change to is in
+    assert(!high_group.isInById(id) &&
+           !mid_group.isInById(id) &&
+           !low_group.isInById(id));
     mid_group.insert(contestant);
     size++;
     balance();
 }
 void ContestantTree::remove(Contestant* contestant) {
     int id=contestant->get_ID();
-    if (high_group.searchById(id)!=NULL){ //TODO switch to is in
+    if (high_group.isInById(id)){
         remove_from_high(contestant);
     }
-    if (mid_group.searchById(id)!=NULL){
+    if (mid_group.isInById(id)){
         remove_from_mid(contestant);
     }
-    if (low_group.searchById(id)!=NULL){
+    if (low_group.isInById(id)){
         remove_from_low(contestant);
     }
     size--;

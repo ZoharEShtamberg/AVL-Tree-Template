@@ -13,8 +13,8 @@ public:
     int get_ID() const;
     int get_medals() const;
     void add_medal();
-    void add_player(int player_ID);
-    void remove_player(int player_ID);
+    void add_player();
+    void remove_player();
     int get_num_of_players() const;
 };
 

@@ -16,8 +16,11 @@ class DoubleTree {
 			strengthTree.remove(contestant);
 		}
 		Contestant* searchById(int id) const {
-			return idTree.search(id)->key;
+			return idTree.search(id);
 		}
+        bool isInById(int id){
+            return idTree.find(id);
+        }
 		Contestant* getMaxById() const {
 			return idTree.getMax()->key;
 		}
