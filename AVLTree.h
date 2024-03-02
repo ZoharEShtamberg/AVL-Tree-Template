@@ -46,8 +46,18 @@ public:
 		root = removeUtil(root, x);
 	}
 	template <typename K>
-	node* search(K x) const {// do i want to return the node or the key?
+	T& search(K x) const {// do i want to return the node or the key?
 		return searchUtil(root, x);
+	}
+
+	bool find(T x) const {
+		try {
+			search(x);
+			return true;
+		}
+		catch (KeyDoesNotExistException&) {
+			return false;
+		}
 	}
 
 	int size() const {
@@ -110,7 +120,7 @@ private:
 	node* insertUtil(node* head, T key);
 	node* removeUtil(node* head, T key);
 	template <typename K>
-	node* searchUtil(node* head, K key) const;
+	T& searchUtil(node* head, K key) const;
 	void destroy(node* head);
 	T* treeToArrayUtil(node* head, T* result);
 	node* createFullTree(int height);
@@ -215,7 +225,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 
 template<typename T, typename COMP>
 template<typename K>
-typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
+T& AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
 	if (head == nullptr) {
 		throw KeyDoesNotExistException();
 	}
@@ -226,7 +236,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::
 		return searchUtil(head->right, key);
 	}
 	else {
-		return head;
+		return head->key;
 	}
 }
 template<typename T, typename COMP>
