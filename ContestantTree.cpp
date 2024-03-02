@@ -21,6 +21,10 @@ void ContestantTree::balance() {
     update_strength();
 }
 
+void ContestantTree::update_austerity() {
+    austerity = 1; //TODO: DO DO 21 21 21
+}
+
 void ContestantTree::update_strength() {
     strength=high_group.getMaxByStrength()->get_strength()
              +mid_group.getMaxByStrength()->get_strength()
@@ -37,9 +41,11 @@ int ContestantTree::get_austerity() const {
 
 void ContestantTree::insert(Contestant* contestant) {
     int id=contestant->get_ID();
-    assert(!high_group.isInById(id) &&
-           !mid_group.isInById(id) &&
-           !low_group.isInById(id));
+    if (high_group.isInById(id) ||
+           mid_group.isInById(id) ||
+           low_group.isInById(id)){
+        throw KeyAlreadyExistsException();
+    }
     mid_group.insert(contestant);
     size++;
     balance();

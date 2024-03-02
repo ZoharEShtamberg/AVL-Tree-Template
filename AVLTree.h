@@ -1,6 +1,7 @@
 #ifndef AVLTree_H
 #define AVLTree_H
 #include <cassert>
+#include <cmath>
 #include "Exceptions.h"
 #include "StupidArr.h"
 #ifndef NDEBUG
@@ -249,7 +250,7 @@ T* AVLTree<T, COMP>::treeToArrayUtil(AVLTree<T, COMP>::node* head, T* result) {
 	return result;
 }
 template<typename T, typename COMP>
-typename AVLTree<T, COMP>::node* createFullTree(int height) {
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::createFullTree(int height) {
 	if (height == -1) return nullptr;
 	node* head = new node(0);
 	head->left = createFullTree(height - 1);
@@ -280,9 +281,9 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 
 template<typename T>
 StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2){	//TODO: make it work with comp
-	T* result = new T[size1 + size2];
+	T* result = new T[arr1.size + arr2.size];
 	int index1 = 0, index2 = 0, resultIndex = 0;
-	while (index1 < size1 && index2 < size2) {
+	while (index1 < arr1.size && index2 < arr2.size) {
 		if (arr1[index1] < arr2[index2]) {
 			result[resultIndex] = arr1[index1];
 			index1++;
@@ -298,12 +299,12 @@ StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2){	//TODO: make it 
 		}
 		resultIndex++;
 	}
-	while (index1 < size1) {
+	while (index1 < arr1.size) {
 		result[resultIndex] = arr1[index1];
 		index1++;
 		resultIndex++;
 	}
-	while (index2 < size2) {
+	while (index2 < arr2.size) {
 		result[resultIndex] = arr2[index2];
 		index2++;
 		resultIndex++;
