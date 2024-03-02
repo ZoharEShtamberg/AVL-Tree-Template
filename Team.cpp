@@ -17,14 +17,14 @@ Sport Team::get_sport() const {
 }
 
 int Team::austerity() {
-    if (this->size()%3!=0){
+    if (this->size()%3!=0 || size()==0){
         return 0;
     }
     return contestants.get_austerity();
 }
 
 int Team::strength() {
-    if (this->size()%3!=0){
+    if (this->size()%3!=0 || size()==0){
         return 0;
     }
     return contestants.get_strength();

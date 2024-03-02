@@ -36,7 +36,7 @@ StatusType Olympics::remove_contestant(int contestantId){
 }
 	
 StatusType Olympics::add_contestant_to_team(int teamId,int contestantId){
-    /**
+
      try {
      if (teamId<=0 || contestantId<=0){
          return StatusType::INVALID_INPUT;
@@ -62,12 +62,12 @@ StatusType Olympics::add_contestant_to_team(int teamId,int contestantId){
          return StatusType::ALLOCATION_ERROR;
      }
 
-     **/
+
      return StatusType::SUCCESS;
 }
 
 StatusType Olympics::remove_contestant_from_team(int teamId,int contestantId){
-    /**
+
      try {
         if (teamId <= 0 || contestantId <= 0) {
             return StatusType::INVALID_INPUT;
@@ -86,7 +86,7 @@ StatusType Olympics::remove_contestant_from_team(int teamId,int contestantId){
     catch (KeyAlreadyExistsException&){
         return StatusType::FAILURE;
     }
-     **/
+
     return StatusType::SUCCESS;
 }
 
