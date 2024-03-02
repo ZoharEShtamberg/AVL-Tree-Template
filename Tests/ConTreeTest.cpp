@@ -102,7 +102,7 @@ bool getStrength2(){
             contestants[i]->add_to_team(1);
         }
         int test_strength=team1.strength();
-        if (test_strength==444){
+        if (test_strength==888){
             return true;
         }
         return false;
@@ -115,7 +115,7 @@ bool getStrength2(){
 bool getStrengthAndAusterityZero(){
     try{
         Team team1=Team(1,1,Sport::SWIMMING);
-        if (!team1.strength() || !team1.austerity()){
+        if (team1.strength()!=0 || team1.austerity()!=0){
             return false;
         }
         int conts[3]={1,2,3};
@@ -128,7 +128,7 @@ bool getStrengthAndAusterityZero(){
         }
         int test_strength=team1.strength();
         team1.remove_player(contestants[0]);
-        if (!team1.strength() || !team1.austerity()){
+        if (team1.strength()!=0 || team1.austerity()!=0){
             return false;
         }
         return true;

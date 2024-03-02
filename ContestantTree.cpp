@@ -53,13 +53,13 @@ void ContestantTree::insert(Contestant* contestant) {
            low_group.isInById(id)){
         throw KeyAlreadyExistsException();
     }
-    int contestant_strength=contestant->get_strength();
-    if (contestant_strength<mid_group.getMinById()->get_ID()){
+    int contestant_id=contestant->get_ID();
+    if (contestant_id<mid_group.getMinById()->get_ID()){
         low_group.insert(contestant);
         temp_con=low_group.getMaxById();
         mid_group.insert(temp_con);
         low_group.remove(temp_con);
-    } else if(contestant_strength>mid_group.getMaxById()->get_ID()){
+    } else if(contestant_id>mid_group.getMaxById()->get_ID()){
         high_group.insert(contestant);
         temp_con=high_group.getMinById();
         high_group.remove(temp_con);
@@ -107,14 +107,14 @@ void ContestantTree::remove_from_mid(Contestant *contestant) { // moves max of l
     low_group.remove(temp);
     temp = high_group.getMinById();
     mid_group.insert(temp);
-    low_group.remove(temp);
+    high_group.remove(temp);
 }
 
 void ContestantTree::remove_from_low(Contestant *contestant) {
-    high_group.remove(contestant);
-    Contestant *temp = low_group.getMaxById();
+    low_group.remove(contestant);
+    Contestant *temp = high_group.getMinById();
     mid_group.insert(temp);
-    low_group.remove(temp);
+    high_group.remove(temp);
 
 }
 
