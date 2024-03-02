@@ -49,8 +49,8 @@ public:
 	T& search(K x) const {// do i want to return the node or the key?
 		return searchUtil(root, x);
 	}
-
-	bool find(T x) const {
+	template <typename K>
+	bool find(K x) const {
 		try {
 			search(x);
 			return true;
