@@ -7,7 +7,7 @@
 //this structure ensures (low size = high size) (low/high size +3 >= size of mid >= low/high size)
 
 void ContestantTree::balance() {
-    if (size%3 != 0){
+    if (size%3 != 0 || size==0){
         return;
     }
     //when we get here we balance back by removing from mid 2 correct elements to low and high
@@ -79,6 +79,9 @@ void ContestantTree::remove_from_high(Contestant *contestant) {
 
 void ContestantTree::remove_from_mid(Contestant *contestant) { // moves max of low and min of high to mid so that balance works
     mid_group.remove(contestant);
+    if (low_group.size()==0){
+        return;
+    }
     Contestant *temp = low_group.getMaxById();
     mid_group.insert(temp);
     low_group.remove(temp);
