@@ -52,6 +52,11 @@ void ContestantTree::insert(Contestant* contestant) {
 }
 void ContestantTree::remove(Contestant* contestant) {
     int id=contestant->get_ID();
+    if (!(high_group.isInById(id) ||
+        mid_group.isInById(id) ||
+        low_group.isInById(id))){
+        throw KeyDoesNotExistException();
+    }
     if (high_group.isInById(id)){
         remove_from_high(contestant);
     }

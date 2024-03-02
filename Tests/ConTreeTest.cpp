@@ -35,16 +35,13 @@ bool insertSameContestant(){
         return false;
     }
 }
-bool removeSameContestant(){
+bool removeContestant(){
     try {
         Team team1 = Team(1, 1, Sport::SWIMMING);
         Contestant con = Contestant(1, 1, Sport::SWIMMING, 1);
-        team1.add_player(&con);
-        con.add_to_team(team1.get_ID());
-        team1.remove_player(&con);
         try {
             team1.remove_player(&con);
-        } catch (KeyDoesNotExistException) {
+        } catch (KeyDoesNotExistException&) {
             return true;
         }
         return false;
@@ -53,7 +50,23 @@ bool removeSameContestant(){
         return false;
     }
 }
-
+bool removeSameContestant(){
+    try {
+        Team team1 = Team(1, 1, Sport::SWIMMING);
+        Contestant con = Contestant(1, 1, Sport::SWIMMING, 1);
+        team1.add_player(&con);
+        team1.remove_player((&con));
+        try {
+            team1.remove_player(&con);
+        } catch (KeyDoesNotExistException&) {
+            return true;
+        }
+        return false;
+    }
+    catch (const std::exception&){
+        return false;
+    }
+}
 
 bool getStrength1(){
     try{
@@ -125,12 +138,48 @@ bool getStrengthAndAusterityZero(){
 }
 
 int main(){
-    bool check;
-    check=insertSameContestant();
-    check=check&&removeSameContestant();
-    check=check&&getStrength1();
-    check=check&&getStrength2();
-    check=check&&getStrengthAndAusterityZero();
+    bool check= true;
+    if(!insertSameContestant()){
+        printf("fail test insert same contestant\n");
+        check= false;
+    } else{
+        printf("success test insert same contestant\n");
+    }
+    if(!getStrength1()){
+        printf("fail test get strength1\n");
+        check= false;
+    }
+    else{
+        printf("success test get strength1\n");
+    }
+    if(!getStrength2()){
+        printf("fail test get strength 2\n");
+        check= false;
+    }
+    else{
+        printf("success test get strength 2\n");
+    }
+    if(!removeContestant()){
+        printf("fail test remove non member contestant\n");
+        check= false;
+    }
+    else{
+        printf("success test remove non member contestant\n");
+    }
+    if(!getStrengthAndAusterityZero()){
+        printf("fail test zero if size not div by 3 or 0\n");
+        check= false;
+    }
+    else{
+        printf("success test zero if size not div by 3 or 0\n\n");
+    }
+    if (!removeSameContestant()){
+        printf("fail test remove member contestant twice\n");
+        check= false;
+    }
+    else{
+        printf("success test remove member contestant twice\n");
+    }
     if (check){
         printf("hell yeah");
         return 0;
