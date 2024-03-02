@@ -92,6 +92,7 @@ StatusType Olympics::remove_contestant_from_team(int teamId,int contestantId){
 
 
 StatusType Olympics::update_contestant_strength(int contestantId ,int change){
+    //go to contestant->find his countries-> remove from all-> update->insert back to all
 	return StatusType::FAILURE;
 }
 
