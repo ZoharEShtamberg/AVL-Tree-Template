@@ -269,7 +269,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 }
 
 template<typename T>
-StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2){
+StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2){	//TODO: make it work with comp
 	T* result = new T[size1 + size2];
 	int index1 = 0, index2 = 0, resultIndex = 0;
 	while (index1 < size1 && index2 < size2) {
