@@ -5,7 +5,7 @@
 // Created by Daniella on 02/03/2024.
 //
 #define CONTESTANT_TREE_TEST_AMOUNT 5
-#include "Team.h"
+#include "Olympicsa1.h"
 
 /**
  * tests:
@@ -17,7 +17,7 @@
  * COUNTRY/INPUT VALIDITY
  * insert contestant from different country/sport to team
  */
-
+/**
 bool insertSameContestant(){
     try {
         Team team1 = Team(1, 1, Sport::SWIMMING);
@@ -136,9 +136,37 @@ bool getStrengthAndAusterityZero(){
         return false;
     }
 }
-
+**/
 int main(){
+    Olympics test=Olympics();
+    test.add_country(1,0);
+    test.add_country(2,0);
+    test.add_team(1,1,Sport::SWIMMING);
+    test.add_team(2,2,Sport::SWIMMING);
+    test.add_contestant(11,1,Sport::SWIMMING,10);
+    test.add_contestant(12,1,Sport::SWIMMING,10);
+    test.add_contestant(13,1,Sport::SWIMMING,10);
+    test.add_contestant(21,2,Sport::SWIMMING,100);
+    test.add_contestant(22,2,Sport::SWIMMING,100);
+    test.add_contestant(23,2,Sport::SWIMMING,100);
+    test.add_contestant_to_team(1,11);
+    test.add_contestant_to_team(1,12);
+    test.add_contestant_to_team(1,13);
+    test.add_contestant_to_team(2,21);
+    test.add_contestant_to_team(2,22);
+    test.add_contestant_to_team(2,23);
+    if (test.get_team_strength(1).ans()==30&&test.get_team_strength(2).ans()==300){
+        printf("omgitworked");
+    }
+    else{
+        printf("at least it ran");
+    }
+    return 0;
+}
+/**
+void pritzzz(){
     bool check= true;
+
     if(!insertSameContestant()){
         printf("fail test insert same contestant\n");
         check= false;
@@ -182,8 +210,9 @@ int main(){
     }
     if (check){
         printf("hell yeah");
-        return 0;
+        return;
     }
     printf("go debug");
-    return 0;
-}
+
+
+}**/

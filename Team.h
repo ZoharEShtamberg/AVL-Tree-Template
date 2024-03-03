@@ -4,18 +4,17 @@
 class Team{
 private:
     const int team_ID;
-    const int countryId;
     Sport team_sport;
     ContestantTree contestants;
 public:
-    explicit Team(int id, int country, Sport sport) :team_ID(id), countryId(country),team_sport(sport){};
+    Country *country;
+    explicit Team(int id, Country* country, Sport sport) :team_ID(id), country(country),team_sport(sport){};
     ~Team()=default;
     int get_ID() const;
     int size() const;
     Sport get_sport() const;
     void add_player(Contestant* contestant);
     void remove_player(Contestant* contestant);
-    int get_country_ID() const;
     int austerity();
     int strength();
     bool unite(Team* team);

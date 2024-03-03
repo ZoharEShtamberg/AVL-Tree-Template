@@ -4,29 +4,30 @@
 
 #include "wet1util.h"
 #include "AVLTree.h"
+#include "Country.h"
 
 class Contestant{
 private:
 	static const int MAX_TEAM_NUM = 3;
     const int contestant_ID;
-    const int country_ID;
     Sport sport;
     int strength;
 	int teams[MAX_TEAM_NUM]{-1,-1,-1};
 public:
-    Contestant(int id, int country,Sport sport, int strength):contestant_ID(id),
-                                                              country_ID(country),
+    Country *country;
+    Contestant(int id, Country* country,Sport sport, int strength):contestant_ID(id),
+                                                              country(country),
                                                               sport(sport),
                                                               strength(strength){};
     int get_ID() const;
     int get_strength() const;
     void set_strength(int input);
-    int get_country_ID() const;
     Sport get_sport() const;
     bool add_to_team(int team);//change type
     bool remove_from_team(int team);
     bool is_available() const;
     bool is_in_team(int team) const;
+    int teams_amount() const;
 
 	};
 
@@ -53,9 +54,14 @@ public:
     }
 
     int operator()(const int a, Contestant* b) const{
-        return this->operator()(b, a);
+        if (a < b->get_ID()){
+            return LESS;
+        }
+        if (a > b->get_ID()){
+            return GREATER;
+        }
+        return EQUAL;
     }
-
 };
 
 

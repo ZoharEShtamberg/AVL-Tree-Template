@@ -51,10 +51,16 @@ bool Contestant::is_available() const {
     return false;
 }
 
-int Contestant::get_country_ID() const {
-    return this->country_ID;
-}
 
 Sport Contestant::get_sport() const {
     return this->sport;
+}
+
+int Contestant::teams_amount() const {
+    int counter=0;
+    for (int team : this->teams) {
+        if (team!=-1)
+            counter++;
+    }
+    return counter;
 }

@@ -8,9 +8,6 @@ int Team::size() const {
     return contestants.get_size();
 }
 
-int Team::get_country_ID() const {
-    return countryId;
-}
 
 Sport Team::get_sport() const {
     return team_sport;
