@@ -295,38 +295,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 	return head;
 }
 
-template<typename T, typename COMP>
-StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2, COMP comparator){
-	T* result = new T[arr1.size + arr2.size];
-	int index1 = 0, index2 = 0, resultIndex = 0;
-	while (index1 < arr1.size && index2 < arr2.size) {
-		if (comp(arr1[index1], arr2[index2])==LESS) {
-			result[resultIndex] = arr1[index1];
-			index1++;
-		}
-		else if (comp(arr1[index1], arr2[index2])==GREATER) {
-			result[resultIndex] = arr2[index2];
-			index2++;
-		}
-		else {	//means we need to remove the duplicate
-			result[resultIndex] = arr1[index1];
-			index1++;
-			index2++;
-		}
-		resultIndex++;
-	}
-	while (index1 < arr1.size) {
-		result[resultIndex] = arr1[index1];
-		index1++;
-		resultIndex++;
-	}
-	while (index2 < arr2.size) {
-		result[resultIndex] = arr2[index2];
-		index2++;
-		resultIndex++;
-	}
-	return StupidArr<T>(result, resultIndex);
-}
+
 
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::treeRemovalUtil AVLTree<T, COMP>::removeNNodes(AVLTree<T, COMP>::treeRemovalUtil head) {
