@@ -48,7 +48,7 @@ public:
 	}
 	template <typename K>
 	T& search(K x) const {// do i want to return the node or the key?
-		return searchUtil(root, x);
+		return searchUtil(root, x)->key;
 	}
 	template <typename K>
 	bool find(K x) const {
@@ -130,7 +130,7 @@ private:
 	node* insertUtil(node* head, T key);
 	node* removeUtil(node* head, T key);
 	template <typename K>
-	T& searchUtil(node* head, K key) const;
+	node* searchUtil(node* head, K key) const;
 	void destroy(node* head);
 	T* treeToArrayUtil(node* head, T* result);	
 	node* createFullTree(int height);
@@ -241,7 +241,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 
 template<typename T, typename COMP>
 template<typename K>
-T& AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
 	if (head == nullptr) {
 		throw KeyDoesNotExistException();
 	}
@@ -252,7 +252,7 @@ T& AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
 		return searchUtil(head->right, key);
 	}
 	else {
-		return head->key;
+		return head;
 	}
 }
 template<typename T, typename COMP>
