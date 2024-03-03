@@ -6,11 +6,10 @@
 template<typename T>
 class StupidArr{
 public:
-	StupidArr(int size) : size(size), arr(new T[size]) {}
+	explicit StupidArr(int size) : size(size), arr(new T[size]) {}	//!!the user is responsible for deleting the array, hence its stupidity!!
 	StupidArr(T* arr, int size) : size(size), arr(arr) {}
-	~StupidArr() {
-		delete[] arr;
-	}
+	StupidArr(const StupidArr& other) = default;
+	StupidArr& operator=(const StupidArr& other) = default;
 	T* arr;
 	int size;
 
