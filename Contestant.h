@@ -12,13 +12,12 @@ private:
     const int country_ID;
     Sport sport;
     int strength;
-	int teams[MAX_TEAM_NUM];//{-1,-1,-1}; //were do i put thi?
+	int teams[MAX_TEAM_NUM]{-1,-1,-1};
 public:
     Contestant(int id, int country,Sport sport, int strength):contestant_ID(id),
                                                               country_ID(country),
                                                               sport(sport),
-                                                              strength(strength){for (int & team : teams) {team=-1;}
-    };
+                                                              strength(strength){};
     int get_ID() const;
     int get_strength() const;
     void set_strength(int input);

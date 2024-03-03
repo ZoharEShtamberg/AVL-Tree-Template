@@ -28,5 +28,14 @@ int Country::get_num_of_players() const {
 }
 
 
+void Country::add_team() {
+    num_of_teams++;
+}
 
+void Country::remove_team() {
+    num_of_teams--;
+}
 
+int Country::get_num_of_teams() const {
+    return this->num_of_teams;
+}

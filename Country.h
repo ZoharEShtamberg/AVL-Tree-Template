@@ -6,8 +6,9 @@ private:
 	const int country_ID;
 	int num_of_medals;
     int num_of_players;
+    int num_of_teams;
 public:
-    explicit Country(int id, int medals )  :country_ID(id), num_of_medals(medals) , num_of_players(0){};
+    explicit Country(int id, int medals )  :country_ID(id), num_of_medals(medals) , num_of_players(0), num_of_teams(0){};
     ~Country() = default;
     Country& operator=(const Country&) = delete; //has to because of id ?
     int get_ID() const;
@@ -15,7 +16,10 @@ public:
     void add_medal();
     void add_player();
     void remove_player();
+    void add_team();
+    void remove_team();
     int get_num_of_players() const;
+    int get_num_of_teams() const;
 };
 
 class CountryComparator {
