@@ -31,19 +31,8 @@ public:
     int get_austerity() const;
     int get_strength() const;
     void uniteWith(ContestantTree& other);
-    //create three arrays sorted by id, and merge them into one array
-    //do the same for the other ContestantTree
-    //merge the two arrays into one array
-    //change stuff in the contestants to point to the new tree, and update the size, strength and austerity
-    //     !! i say "stuff" because there are going to be some edge cases that i need to think about !!
-    //hold the array somewhere
-    //create three arrays sorted by strength, and merge them into one array
-    //do the same for the other ContestantTree
-    //merge the two arrays into one array
-    //partition the id array into three arrays, by Dannielle's algorithm
-    //partition the strength array into three arrays, according to the the partitioning of the id array
-    //create three DoubleTrees from the six arrays
     //(Borat voice) "Great success!"
+    StupidArr<Contestant*> getContestantsArr() const;
 
 };
 

@@ -195,3 +195,16 @@ StupidArr<Contestant*> ContestantTree::strengthArrFromIdArr(StupidArr<Contestant
     }
     return result;
 }
+
+StupidArr<Contestant*> ContestantTree::getContestantsArr() const {
+    StupidArr<Contestant*> low_arr=low_group.idTreeToArray();
+    StupidArr<Contestant*> mid_arr=mid_group.idTreeToArray();
+    StupidArr<Contestant*> high_arr=high_group.idTreeToArray();
+    StupidArr<Contestant*> temp = mergeArrays(low_arr,mid_arr,ContestantIDComparator());
+    StupidArr<Contestant*> result = mergeArrays(temp,high_arr,ContestantIDComparator());
+    delete[] temp.arr;
+    delete[] low_arr.arr;
+    delete[] mid_arr.arr;
+    delete[] high_arr.arr;
+    return result;
+}

@@ -34,3 +34,12 @@ void Team::add_player(Contestant* contestant) {
 void Team::remove_player(Contestant* contestant) {
     contestants.remove(contestant);
 }
+
+void Team::unite(Team* team) {
+    contestants.uniteWith(team->contestants);
+    StupidArr<Contestant*> arr=team->contestants.getContestantsArr();   //waste of memory, but its O(n)!
+    for (int i = 0; i < arr.size; ++i) {
+        arr.arr[i]->remove_from_team(team_ID);
+    }
+    delete[] arr.arr;
+}
