@@ -170,7 +170,16 @@ void ContestantTree::uniteWith(ContestantTree &other) {
     StupidArr<Contestant*> low_strength_arr = strengthArrFromIdArr(low_arr,strength_arr);
     StupidArr<Contestant*> mid_strength_arr = strengthArrFromIdArr(mid_arr,strength_arr);
     StupidArr<Contestant*> high_strength_arr = strengthArrFromIdArr(high_arr,strength_arr);
-
+    low_group.arrayToDoubleTree(low_arr,low_strength_arr);
+    mid_group.arrayToDoubleTree(mid_arr,mid_strength_arr);
+    high_group.arrayToDoubleTree(high_arr,high_strength_arr);
+    update_austerity();
+    update_strength();
+    delete[] id_arr.arr;
+    delete[] strength_arr.arr;
+    delete[] low_strength_arr.arr;
+    delete[] mid_strength_arr.arr;
+    delete[] high_strength_arr.arr;
 }
 
 StupidArr<Contestant*> ContestantTree::strengthArrFromIdArr(StupidArr<Contestant*> id_arr, StupidArr<Contestant*> strength_arr) const {
