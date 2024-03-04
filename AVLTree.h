@@ -9,9 +9,6 @@
 #include <algorithm>
 #endif	//NDEBUG
 
-#define LESS -1
-#define EQUAL 0
-#define GREATER 1
 
 inline int max(int a, int b) { //its better to use std::max
 	return a > b ? a : b;
@@ -115,7 +112,19 @@ public:
 #ifndef NDEBUG //for testing purposes
 	bool isCorrect() {
 		std::vector<T> v = vectorizedTree();
-		return isBalanced() && std::is_sorted(v.begin(), v.end()) && v.size() == n;
+		bool treeToArrIsCorrect = true;
+		StupidArr<T> arr = treeToArray();
+		for (int i = 0; i < n; i++) {
+			if (v[i] != arr[i]) {
+				treeToArrIsCorrect = false;
+				break;
+			}
+		}
+		delete[] arr.arr;
+		return isBalanced() &&
+				 std::is_sorted(v.begin(), v.end()) &&
+				 	 v.size() == n &&
+					 	treeToArrIsCorrect;
 	}
 #endif	//NDEBUG
 
@@ -305,7 +314,7 @@ typename AVLTree<T, COMP>::treeRemovalUtil AVLTree<T, COMP>::removeNNodes(AVLTre
 	head.head->right = right.head;
 	head.remove = right.remove;
 	head.head->height = 1 + max(height(head.head->left), height(head.head->right));
-	if(head.remove==0) {return head};
+	if(head.remove==0) {return head;}
 	if(head.head->left==nullptr && head.head->right==nullptr){
 		delete head.head;
 		head.head=nullptr;

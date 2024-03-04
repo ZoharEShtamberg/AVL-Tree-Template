@@ -87,7 +87,7 @@ int main() {
 	}
 	for (int i = 0; i < 1300; i++) {
 		try {
-			std::cout << tree.search(i)->key << " found" << std::endl;
+			std::cout << tree.search(i) << " found" << std::endl;
 			CHECK
 		}
 		catch (KeyDoesNotExistException& e) {

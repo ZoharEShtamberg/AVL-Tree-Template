@@ -1,12 +1,18 @@
 #ifndef STUPIDARR_H
 #define STUPIDARR_H
+//i moved the definition of the comparison constants here,
+// because i want to use them in the mergeArrays function
+#define LESS -1
+#define EQUAL 0
+#define GREATER 1
 
 #include <cassert>
 
 template<typename T>
 class StupidArr{
 public:
-	explicit StupidArr(int size) : size(size), arr(new T[size]) {}	//!!the user is responsible for deleting the array, hence its stupidity!!
+	//!!the user is responsible for deleting the array, hence its stupidity!!
+	explicit StupidArr(int size) : size(size), arr(new T[size]) {}	
 	StupidArr(T* arr, int size) : size(size), arr(arr) {}
 	StupidArr(const StupidArr& other) = default;
 	StupidArr& operator=(const StupidArr& other) = default;
