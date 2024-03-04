@@ -175,6 +175,8 @@ void ContestantTree::uniteWith(ContestantTree &other) {
     high_group.arrayToDoubleTree(high_arr,high_strength_arr);
     update_austerity();
     update_strength();
+    size = id_arr.size;
+    other.size = 0; //risky move
     delete[] id_arr.arr;
     delete[] strength_arr.arr;
     delete[] low_strength_arr.arr;
