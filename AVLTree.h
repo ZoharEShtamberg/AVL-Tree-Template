@@ -97,12 +97,17 @@ public:
 		return result;
 	}
 
-	node* arrayToTree(StupidArr<T> arr) {	//if theres an error here, its probably an off by one error
+	void arrayToTree(StupidArr<T> arr) {	//if theres an error here, its probably an off by one error
 		int height = std::ceil(std::log2(arr.size + 1)) + 1;
 		node* newRoot = createFullTree(height);
 		newRoot = removeNNodes(newRoot, std::exp2(height+1)-1-arr.size);	// remove redundant nodes
-		// insert the array into the tree
+		newRoot = insertArray(newRoot, arr.arr);
+		destroy(root);
+		root = newRoot;
+		n = arr.size;
 	}
+
+
 
 	
 
@@ -140,6 +145,7 @@ private:
 		treeRemovalUtil(node* head, int remove) : head(head), remove(remove) {}
 	};
 	treeRemovalUtil removeNNodes(treeRemovalUtil tree);
+	T* insertArray(node* head, T* arr);
 
 	//general utility functions
 	int height(node* head) const {
@@ -237,6 +243,15 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 		head = balanceTree(head, balanceFactor(head));
 	}
 	return head;
+}
+template<typename T, typename COMP>
+T* AVLTree<T, COMP>::insertArray(AVLTree<T, COMP>::node* head, T* arr) {
+	if (head == nullptr) return arr;
+	T* afterLeft = insertArray(head->left, arr);
+	head->key = *arr;
+	arr++;
+	T* afterRight = insertArray(head->right, arr);
+	return afterRight; 
 }
 
 template<typename T, typename COMP>
