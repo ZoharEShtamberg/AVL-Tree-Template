@@ -90,7 +90,7 @@ public:
 
 	StupidArr<T> treeToArray() const {	//memory should be deleted by the user
 		StupidArr<T> result(n);
-		treeToArrayUtil(root, result->arr);
+		treeToArrayUtil(root, result.arr);
 		return result;
 	}
 
@@ -123,7 +123,7 @@ public:
 		delete[] arr.arr;
 		return isBalanced() &&
 				 std::is_sorted(v.begin(), v.end()) &&
-				 	 v.size() == n &&
+				 	 v.size() == static_cast<unsigned int>(n) &&
 					 	treeToArrIsCorrect;
 	}
 #endif	//NDEBUG
