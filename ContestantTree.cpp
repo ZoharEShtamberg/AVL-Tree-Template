@@ -148,3 +148,23 @@ StupidArr<Contestant*> ContestantTree::getArrByStrength() const {
     delete[] high_arr.arr;
     return result;
 }
+
+void ContestantTree::uniteWith(ContestantTree &other) {
+    StupidArr<Contestant*> this_id_arr = getArrById();
+    StupidArr<Contestant*> other_id_arr = other.getArrById();
+    StupidArr<Contestant*> this_strength_arr = getArrByStrength();
+    StupidArr<Contestant*> other_strength_arr = other.getArrByStrength();
+    StupidArr<Contestant*> id_arr = mergeArrays(this_id_arr,other_id_arr,ContestantIDComparator());
+    StupidArr<Contestant*> strength_arr = mergeArrays(this_strength_arr,other_strength_arr,ContestantStrengthComparator());
+    delete[] this_id_arr.arr;
+    delete[] other_id_arr.arr;
+    delete[] this_strength_arr.arr;
+    delete[] other_strength_arr.arr;
+    int size = id_arr.size;
+    int low_size = size/3;
+    int high_size = size/3;
+    int mid_size = size - low_size - high_size;
+    StupidArr<Contestant*> low_arr = StupidArr<Contestant*>(id_arr.arr,low_size);
+    StupidArr<Contestant*> mid_arr = StupidArr<Contestant*>(id_arr.arr+low_size,mid_size);
+    StupidArr<Contestant*> high_arr = StupidArr<Contestant*>(id_arr.arr+low_size+mid_size,high_size);
+    
