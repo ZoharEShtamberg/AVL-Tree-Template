@@ -93,12 +93,18 @@ public:
 		treeToArrayUtil(root, result.arr);
 		return result;
 	}
-
-	node* arrayToTree(StupidArr<T> arr) {	//if theres an error here, its probably an off by one error
-		int height = std::ceil(std::log2(arr.size + 1)) + 1;
+	/// @brief replaces the current tree with a new tree that has the same elements as the array
+	/// @param arr sorted StupidArr of Ts, will not be deleted, will take arr.size Ts from the array
+	void arrayToTree(StupidArr<T> arr) {	//if theres an error here, its probably an off by one error
+		if(arr.size==0) {return nullptr;}
+		int height = std::ceil(std::log2(arr.size + 1)) - 1;	//bruh moment indeed
 		node* newRoot = createFullTree(height);
-		newRoot = removeNNodes(newRoot, std::exp2(height+1)-1-arr.size);	// remove redundant nodes
-		// insert the array into the tree
+		assert(newRoot != nullptr);
+		newRoot = removeNNodes(treeRemovalUtil(newRoot, std::exp2(height+1)-1-arr.size;))	// remove redundant nodes
+		arrayToTreeUtil(arr.arr, newRoot);	// insert the array into the tree
+		n = arr.size;
+		destroy(root);
+		root = newRoot;
 	}
 
 	
@@ -149,6 +155,7 @@ private:
 		treeRemovalUtil(node* head, int remove) : head(head), remove(remove) {}
 	};
 	treeRemovalUtil removeNNodes(treeRemovalUtil tree);
+	T* arrayToTreeUtil(T* arr, node* head);
 
 	//general utility functions
 	int height(node* head) const {
@@ -281,6 +288,16 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::createFullTree(int height) {
 	head->right = createFullTree(height - 1);
 	head->height = height;
 	return head;
+}
+
+template<typename T, typename COMP>
+T* AVLTree<T, COMP>::arrayToTreeUtil(T* arr, AVLTree<T, COMP>::node* head) {
+	if (head == nullptr) return arr;
+	arr = arrayToTreeUtil(arr, head->left);
+	head->key = *arr;
+	arr++;
+	arr = arrayToTreeUtil(arr, head->right);
+	return arr;
 }
 //--------------general utility functions--------------//
 template<typename T, typename COMP>
