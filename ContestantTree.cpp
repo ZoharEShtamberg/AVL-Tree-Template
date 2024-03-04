@@ -122,3 +122,29 @@ int ContestantTree::get_size() const {
     assert(mid_group.size()+low_group.size()+high_group.size()==size);
     return this->size;
 }
+
+StupidArr<Contestant*> ContestantTree::getArrById() const {
+    StupidArr<Contestant*> low_arr=low_group.idTreeToArray();
+    StupidArr<Contestant*> mid_arr=mid_group.idTreeToArray();
+    StupidArr<Contestant*> high_arr=high_group.idTreeToArray();
+    StupidArr<Contestant*> temp = mergeArrays(low_arr,mid_arr,ContestantIDComparator());
+    StupidArr<Contestant*> result = mergeArrays(temp,high_arr,ContestantIDComparator());
+    delete[] temp.arr;
+    delete[] low_arr.arr;
+    delete[] mid_arr.arr;
+    delete[] high_arr.arr;
+    return result;
+}
+
+StupidArr<Contestant*> ContestantTree::getArrByStrength() const {
+    StupidArr<Contestant*> low_arr=low_group.strengthTreeToArray();
+    StupidArr<Contestant*> mid_arr=mid_group.strengthTreeToArray();
+    StupidArr<Contestant*> high_arr=high_group.strengthTreeToArray();
+    StupidArr<Contestant*> temp = mergeArrays(low_arr,mid_arr,ContestantStrengthComparator());
+    StupidArr<Contestant*> result = mergeArrays(temp,high_arr,ContestantStrengthComparator());
+    delete[] temp.arr;
+    delete[] low_arr.arr;
+    delete[] mid_arr.arr;
+    delete[] high_arr.arr;
+    return result;
+}

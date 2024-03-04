@@ -18,6 +18,8 @@ private:
     void remove_from_high(Contestant* contestant);
     void remove_from_mid(Contestant* contestant);
     void remove_from_low(Contestant* contestant);
+    StupidArr<Contestant*> getArrById() const;
+    StupidArr<Contestant*> getArrByStrength() const;
 public:
     ContestantTree():size(0), austerity(0), strength(0){};
     ~ContestantTree()=default;
