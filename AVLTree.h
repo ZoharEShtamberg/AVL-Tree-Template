@@ -48,7 +48,7 @@ public:
 	}
 	template <typename K>
 	T& search(K x) const {// do i want to return the node or the key?
-		return searchUtil(root, x);
+		return searchUtil(root, x)->key;
 	}
 	template <typename K>
 	bool find(K x) const {
@@ -91,18 +91,27 @@ public:
 		return temp;
 	}
 
-	StupidArr<T> treeToArray() const {
+	StupidArr<T> treeToArray() const {	//memory should be deleted by the user
 		StupidArr<T> result(n);
 		treeToArrayUtil(root, result->arr);
 		return result;
 	}
 
-	void unite(AVLTree<T, COMP>& other) {
-		StupidArr<T> mergedArr = mergeArrays(treeToArray(), other.treeToArray());
-		node* newRoot = createFullTree(std::ceil(std::log2(mergedArr.size)));
-		//insert the merged array into the tree
-
+	node* arrayToTree(StupidArr<T> arr) {	//if theres an error here, its probably an off by one error
+		int height = std::ceil(std::log2(arr.size + 1)) + 1;
+		node* newRoot = createFullTree(height);
+		newRoot = removeNNodes(newRoot, std::exp2(height+1)-1-arr.size);	// remove redundant nodes
+		// insert the array into the tree
 	}
+
+	
+
+	// void unite(AVLTree<T, COMP>& other) {	//do i need this?
+	// 	StupidArr<T> mergedArr = mergeArrays(treeToArray(), other.treeToArray());
+	// 	node* newRoot = createFullTree(std::ceil(std::log2(mergedArr.size)));
+	// 	//insert the merged array into the tree
+
+	// }
 #ifndef NDEBUG //for testing purposes
 	bool isCorrect() {
 		std::vector<T> v = vectorizedTree();
@@ -121,10 +130,16 @@ private:
 	node* insertUtil(node* head, T key);
 	node* removeUtil(node* head, T key);
 	template <typename K>
-	T& searchUtil(node* head, K key) const;
+	node* searchUtil(node* head, K key) const;
 	void destroy(node* head);
-	T* treeToArrayUtil(node* head, T* result);
+	T* treeToArrayUtil(node* head, T* result);	
 	node* createFullTree(int height);
+	struct treeRemovalUtil{
+		node* head;
+		int remove;
+		treeRemovalUtil(node* head, int remove) : head(head), remove(remove) {}
+	};
+	treeRemovalUtil removeNNodes(treeRemovalUtil tree);
 
 	//general utility functions
 	int height(node* head) const {
@@ -155,9 +170,9 @@ private:
 template<typename T, typename COMP>
 typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::insertUtil(AVLTree<T, COMP>::node* head, T key) {
 	if (head == nullptr) {
-		node* newnode = new node(key);
+		node* newNode = new node(key);
 		n++; //alloc error wont change n
-		return newnode;
+		return newNode;
 	}
 	if (comp(key, head->key) == LESS) {
 		head->left = insertUtil(head->left, key);
@@ -226,7 +241,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 
 template<typename T, typename COMP>
 template<typename K>
-T& AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
+typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
 	if (head == nullptr) {
 		throw KeyDoesNotExistException();
 	}
@@ -237,7 +252,7 @@ T& AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::node* head, K key) const {
 		return searchUtil(head->right, key);
 	}
 	else {
-		return head->key;
+		return head;
 	}
 }
 template<typename T, typename COMP>
@@ -255,6 +270,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::createFullTree(int height) {
 	node* head = new node(0);
 	head->left = createFullTree(height - 1);
 	head->right = createFullTree(height - 1);
+	head->height = height;
 	return head;
 }
 //--------------general utility functions--------------//
@@ -279,37 +295,28 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::balanceTree(AVLTree<T, COMP>:
 	return head;
 }
 
-template<typename T>
-StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2){	//TODO: make it work with comp
-	T* result = new T[arr1.size + arr2.size];
-	int index1 = 0, index2 = 0, resultIndex = 0;
-	while (index1 < arr1.size && index2 < arr2.size) {
-		if (arr1[index1] < arr2[index2]) {
-			result[resultIndex] = arr1[index1];
-			index1++;
-		}
-		else if (arr1[index1] > arr2[index2]) {
-			result[resultIndex] = arr2[index2];
-			index2++;
-		}
-		else {	//means we need to remove the duplicate
-			result[resultIndex] = arr1[index1];
-			index1++;
-			index2++;
-		}
-		resultIndex++;
+
+
+template<typename T, typename COMP>
+typename AVLTree<T, COMP>::treeRemovalUtil AVLTree<T, COMP>::removeNNodes(AVLTree<T, COMP>::treeRemovalUtil head) {
+	if (head.remove == 0) return head;
+	if (head.head==nullptr) return head;
+	treeRemovalUtil right = removeNNodes(treeRemovalUtil(head.head->right, head.remove));
+	head.head->right = right.head;
+	head.remove = right.remove;
+	head.head->height = 1 + max(height(head.head->left), height(head.head->right));
+	if(head.remove==0) {return head};
+	if(head.head->left==nullptr && head.head->right==nullptr){
+		delete head.head;
+		head.head=nullptr;
+		head.remove--;
+		return head;
 	}
-	while (index1 < arr1.size) {
-		result[resultIndex] = arr1[index1];
-		index1++;
-		resultIndex++;
-	}
-	while (index2 < arr2.size) {
-		result[resultIndex] = arr2[index2];
-		index2++;
-		resultIndex++;
-	}
-	return StupidArr<T>(result, resultIndex);
+	treeRemovalUtil left = removeNNodes(treeRemovalUtil(head.head->left, head.remove));
+	head.head->left = left.head;
+	head.remove = left.remove;
+	head.head->height = 1 + max(height(head.head->left), height(head.head->right));
+	return head;		
 }
 //--------------Roll Functions--------------//
 template<typename T, typename COMP>
