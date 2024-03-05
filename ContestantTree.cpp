@@ -6,6 +6,12 @@
 
 //this structure ensures (low size = high size) (low/high size +3 >= size of mid >= low/high size)
 
+int ContestantTree::calculate_strength() const {
+    return high_group.getMaxByStrength()->get_strength()
+           +mid_group.getMaxByStrength()->get_strength()
+           +low_group.getMaxByStrength()->get_strength();
+}
+
 void ContestantTree::balance() {
     if (size%3 != 0 || size==0){
         return;
@@ -22,6 +28,10 @@ void ContestantTree::balance() {
 void ContestantTree::update_austerity() {
     if(size%3!=0||size==0||size==3){
         austerity=0;
+        return;
+    }
+    if(size==6){
+        austerity = calculate_strength();
         return;
     }
     Contestant* temp[3];
@@ -44,11 +54,9 @@ void ContestantTree::update_austerity() {
                 remove_from_high(temp[i+removeFromLow+removeFromMid]);
             }
             balance();  //we removed 3 contestants, we need to balance back
-            int strength=high_group.getMaxByStrength()->get_strength()
-                            +mid_group.getMaxByStrength()->get_strength()
-                            +low_group.getMaxByStrength()->get_strength();  
+            int strengthAfterRemoval=calculate_strength();  
 
-            maxScore = max(maxScore, strength);
+            maxScore = max(maxScore, strengthAfterRemoval);
             for(int i = 0; i < removeFromHigh; i++){    //return to high
                 high_group.insert(temp[i+removeFromLow+removeFromMid]);
             }
@@ -66,9 +74,7 @@ void ContestantTree::update_austerity() {
 }
 
 void ContestantTree::update_strength() {
-    strength=high_group.getMaxByStrength()->get_strength()
-             +mid_group.getMaxByStrength()->get_strength()
-             +low_group.getMaxByStrength()->get_strength();
+    strength=calculate_strength();
 }
 
 int ContestantTree::get_strength() const {

@@ -12,6 +12,7 @@ private:
     int size;
     int austerity;
     int strength;
+    int calculate_strength() const;
     void balance();
     void update_strength();
     void update_austerity(); //TODO
