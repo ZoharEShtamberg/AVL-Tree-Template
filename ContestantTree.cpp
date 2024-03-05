@@ -33,22 +33,24 @@ void ContestantTree::update_austerity() {
         }
         for(int removeFromMid = 0; removeFromMid < 3-removeFromLow; removeFromMid++){   //ways to remove from mid
             for(int i = 0; i < removeFromMid; i++){ //remove from mid
+                assert(i+removeFromLow<3);
                 temp[i+removeFromLow] = mid_group.getMinByStrength();
                 remove_from_mid(temp[i+removeFromLow]);
             }
-            for(int removeFromHigh = 0; removeFromHigh < 3-removeFromLow-removeFromMid; removeFromHigh++){  //ways to remove from high
-                for(int i = 0; i < removeFromHigh; i++){    //remove from high
-                    temp[i+removeFromLow+removeFromMid] = high_group.getMinByStrength();
-                    remove_from_high(temp[i+removeFromLow+removeFromMid]);
-                }
-                balance();  
-                int strength=high_group.getMaxByStrength()->get_strength()
-                                +mid_group.getMaxByStrength()->get_strength()
-                                +low_group.getMaxByStrength()->get_strength();
-                maxScore = max(maxScore, strength);
-                for(int i = 0; i < removeFromHigh; i++){    //return to high
-                    high_group.insert(temp[i+removeFromLow+removeFromMid]);
-                }
+            int removeFromHigh = 3-removeFromLow-removeFromMid; //left to remove from high
+            for(int i = 0; i < removeFromHigh; i++){    //remove from high
+                assert(i+removeFromLow+removeFromMid<3);
+                temp[i+removeFromLow+removeFromMid] = high_group.getMinByStrength();
+                remove_from_high(temp[i+removeFromLow+removeFromMid]);
+            }
+            balance();  //we removed 3 contestants, we need to balance back
+            int strength=high_group.getMaxByStrength()->get_strength()
+                            +mid_group.getMaxByStrength()->get_strength()
+                            +low_group.getMaxByStrength()->get_strength();  
+
+            maxScore = max(maxScore, strength);
+            for(int i = 0; i < removeFromHigh; i++){    //return to high
+                high_group.insert(temp[i+removeFromLow+removeFromMid]);
             }
             for(int i = 0; i < removeFromMid; i++){ //return to mid
                 mid_group.insert(temp[i+removeFromLow]);
@@ -60,6 +62,7 @@ void ContestantTree::update_austerity() {
         balance();  //balance back
 
     }
+    austerity = maxScore;
 }
 
 void ContestantTree::update_strength() {
