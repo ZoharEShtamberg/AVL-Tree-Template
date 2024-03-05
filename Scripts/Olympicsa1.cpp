@@ -321,8 +321,7 @@ StatusType Olympics::play_match(int teamId1,int teamId2){
     try{
         Team *team1=O_teams.search(teamId1);
         Team *team2=O_teams.search(teamId2);
-        if (team1->get_sport()!=team2->get_sport() ||
-            team1->country->get_ID()!=team2->country->get_ID()){
+        if (team1->get_sport()!=team2->get_sport()){
             return StatusType::FAILURE;
         }
         int team1_score=team1->strength()+team1->country->get_medals();

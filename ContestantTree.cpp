@@ -7,6 +7,9 @@
 //this structure ensures (low size = high size) (low/high size +3 >= size of mid >= low/high size)
 
 int ContestantTree::calculate_strength() const {
+    if(size<3){
+        return 0;
+    }
     return high_group.getMaxByStrength()->get_strength()
            +mid_group.getMaxByStrength()->get_strength()
            +low_group.getMaxByStrength()->get_strength();
@@ -242,7 +245,7 @@ StupidArr<Contestant*> ContestantTree::strengthArrFromIdArr(StupidArr<Contestant
     int max_id = id_arr[id_arr.size-1]->get_ID();
     for(int i=0, j=0; i<strength_arr.size; i++){
         if(strength_arr[i]->get_ID()>=min_id&&strength_arr[i]->get_ID()<=max_id){
-            result[j]==strength_arr[i];
+            result[j]=strength_arr[i];
             j++;
             assert(j<=id_arr.size);
         }

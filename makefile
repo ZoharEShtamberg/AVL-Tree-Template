@@ -1,11 +1,11 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG -g -I.
 EXEC = olympics	
-OBJECTS = main.o Olympics.o Contestant.o ContestantTree.o Country.o DoubleTree.o Team.o Olympicsa1.o maina1.o
+OBJECTS = Contestant.o ContestantTree.o Country.o DoubleTree.o Team.o Olympicsa1.o maina1.o
 
 
-
-
+$(EXEC): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
 
 Contestant.o: Contestant.cpp Contestant.h Scripts/wet1util.h AVLTree.h Exceptions.h StupidArr.h Country.h

@@ -8,7 +8,7 @@ private:
     ContestantTree contestants;
 public:
     Country *country;
-    explicit Team(int id, Country* country, Sport sport) :team_ID(id), country(country),team_sport(sport){};
+    explicit Team(int id, Country* country, Sport sport) :team_ID(id),team_sport(sport), country(country){};
     ~Team()=default;
     int get_ID() const;
     int size() const;

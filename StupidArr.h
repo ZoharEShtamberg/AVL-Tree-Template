@@ -26,7 +26,7 @@ public:
 	
 };
 template<typename T, typename COMP>
-StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2, COMP comparator){
+StupidArr<T> mergeArrays(StupidArr<T> arr1, StupidArr<T> arr2, COMP comp){
 	T* result = new T[arr1.size + arr2.size];
 	int index1 = 0, index2 = 0, resultIndex = 0;
 	while (index1 < arr1.size && index2 < arr2.size) {
