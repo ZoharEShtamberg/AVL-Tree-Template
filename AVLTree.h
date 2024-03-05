@@ -90,15 +90,21 @@ public:
 
 	StupidArr<T> treeToArray() const {	//memory should be deleted by the user
 		StupidArr<T> result(n);
-		treeToArrayUtil(root, result->arr);
+		treeToArrayUtil(root, result.arr);
 		return result;
 	}
-
-	node* arrayToTree(StupidArr<T> arr) {	//if theres an error here, its probably an off by one error
-		int height = std::ceil(std::log2(arr.size + 1)) + 1;
+	/// @brief replaces the current tree with a new tree that has the same elements as the array
+	/// @param arr sorted StupidArr of Ts, will not be deleted, will take arr.size Ts from the array
+	void arrayToTree(StupidArr<T> arr) {	//if theres an error here, its probably an off by one error
+		if(arr.size==0) {return;}
+		int height = std::ceil(std::log2(arr.size + 1)) - 1;	//bruh moment indeed
 		node* newRoot = createFullTree(height);
-		newRoot = removeNNodes(newRoot, std::exp2(height+1)-1-arr.size);	// remove redundant nodes
-		// insert the array into the tree
+		assert(newRoot != nullptr);
+		newRoot = removeNNodes(treeRemovalUtil(newRoot, std::exp2(height+1)-1-arr.size)).head;	// remove redundant nodes
+		arrayToTreeUtil(arr.arr, newRoot);	// insert the array into the tree
+		n = arr.size;
+		destroy(root);
+		root = newRoot;
 	}
 
 	
@@ -123,8 +129,12 @@ public:
 		delete[] arr.arr;
 		return isBalanced() &&
 				 std::is_sorted(v.begin(), v.end()) &&
-				 	 v.size() == n &&
+				 	 v.size() == static_cast<unsigned int>(n) &&
 					 	treeToArrIsCorrect;
+	}
+
+	node* getRoot() const {
+		return root;
 	}
 #endif	//NDEBUG
 
@@ -141,7 +151,7 @@ private:
 	template <typename K>
 	node* searchUtil(node* head, K key) const;
 	void destroy(node* head);
-	T* treeToArrayUtil(node* head, T* result);	
+	T* treeToArrayUtil(node* head, T* result) const;	
 	node* createFullTree(int height);
 	struct treeRemovalUtil{
 		node* head;
@@ -149,6 +159,7 @@ private:
 		treeRemovalUtil(node* head, int remove) : head(head), remove(remove) {}
 	};
 	treeRemovalUtil removeNNodes(treeRemovalUtil tree);
+	T* arrayToTreeUtil(T* arr, node* head);
 
 	//general utility functions
 	int height(node* head) const {
@@ -265,7 +276,7 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::searchUtil(AVLTree<T, COMP>::
 	}
 }
 template<typename T, typename COMP>
-T* AVLTree<T, COMP>::treeToArrayUtil(AVLTree<T, COMP>::node* head, T* result) {
+T* AVLTree<T, COMP>::treeToArrayUtil(AVLTree<T, COMP>::node* head, T* result) const{
 	if (head == nullptr) return result;
 	result = treeToArrayUtil(head->left, result);
 	*result = head->key;
@@ -281,6 +292,16 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::createFullTree(int height) {
 	head->right = createFullTree(height - 1);
 	head->height = height;
 	return head;
+}
+
+template<typename T, typename COMP>
+T* AVLTree<T, COMP>::arrayToTreeUtil(T* arr, AVLTree<T, COMP>::node* head) {
+	if (head == nullptr) return arr;
+	arr = arrayToTreeUtil(arr, head->left);
+	head->key = *arr;
+	arr++;
+	arr = arrayToTreeUtil(arr, head->right);
+	return arr;
 }
 //--------------general utility functions--------------//
 template<typename T, typename COMP>

@@ -6,6 +6,12 @@
 
 //this structure ensures (low size = high size) (low/high size +3 >= size of mid >= low/high size)
 
+int ContestantTree::calculate_strength() const {
+    return high_group.getMaxByStrength()->get_strength()
+           +mid_group.getMaxByStrength()->get_strength()
+           +low_group.getMaxByStrength()->get_strength();
+}
+
 void ContestantTree::balance() {
     if (size%3 != 0 || size==0){
         return;
@@ -17,18 +23,58 @@ void ContestantTree::balance() {
     temp= mid_group.getMinById();
     low_group.insert(temp);
     mid_group.remove(temp);
-    update_austerity();
-    update_strength();
 }
 
 void ContestantTree::update_austerity() {
-    austerity = 1; //TODO: DO DO 21 21 21
+    if(size%3!=0||size==0||size==3){
+        austerity=0;
+        return;
+    }
+    if(size==6){
+        austerity = calculate_strength();
+        return;
+    }
+    Contestant* temp[3];
+    int maxScore = 0;
+    for(int removeFromLow = 0; removeFromLow < 3; removeFromLow++){ //ways to remove from low
+        for(int i = 0; i < removeFromLow; i++){ //remove from low
+            temp[i] = low_group.getMinByStrength();
+            remove_from_low(temp[i]);
+        }
+        for(int removeFromMid = 0; removeFromMid < 3-removeFromLow; removeFromMid++){   //ways to remove from mid
+            for(int i = 0; i < removeFromMid; i++){ //remove from mid
+                assert(i+removeFromLow<3);
+                temp[i+removeFromLow] = mid_group.getMinByStrength();
+                remove_from_mid(temp[i+removeFromLow]);
+            }
+            int removeFromHigh = 3-removeFromLow-removeFromMid; //left to remove from high
+            for(int i = 0; i < removeFromHigh; i++){    //remove from high
+                assert(i+removeFromLow+removeFromMid<3);
+                temp[i+removeFromLow+removeFromMid] = high_group.getMinByStrength();
+                remove_from_high(temp[i+removeFromLow+removeFromMid]);
+            }
+            balance();  //we removed 3 contestants, we need to balance back
+            int strengthAfterRemoval=calculate_strength();  
+
+            maxScore = max(maxScore, strengthAfterRemoval);
+            for(int i = 0; i < removeFromHigh; i++){    //return to high
+                high_group.insert(temp[i+removeFromLow+removeFromMid]);
+            }
+            for(int i = 0; i < removeFromMid; i++){ //return to mid
+                mid_group.insert(temp[i+removeFromLow]);
+            }
+        }
+        for(int i = 0; i < removeFromLow; i++){ //return to low
+        low_group.insert(temp[i]);
+        }
+        balance();  //balance back
+
+    }
+    austerity = maxScore;
 }
 
 void ContestantTree::update_strength() {
-    strength=high_group.getMaxByStrength()->get_strength()
-             +mid_group.getMaxByStrength()->get_strength()
-             +low_group.getMaxByStrength()->get_strength();
+    strength=calculate_strength();
 }
 
 int ContestantTree::get_strength() const {
@@ -44,6 +90,8 @@ void ContestantTree::insert(Contestant* contestant) {
         mid_group.insert(contestant);
         size++;
         balance();
+        update_austerity();
+        update_strength();
         return;
     }
     int id=contestant->get_ID();
@@ -69,6 +117,8 @@ void ContestantTree::insert(Contestant* contestant) {
     }
     size++;
     balance();
+    update_austerity();
+    update_strength();
 }
 void ContestantTree::remove(Contestant* contestant) {
     int id=contestant->get_ID();
@@ -88,6 +138,8 @@ void ContestantTree::remove(Contestant* contestant) {
     }
     size--;
     balance();
+    update_austerity();
+    update_strength();
 }
 
 void ContestantTree::remove_from_high(Contestant *contestant) {
@@ -121,4 +173,92 @@ void ContestantTree::remove_from_low(Contestant *contestant) {
 int ContestantTree::get_size() const {
     assert(mid_group.size()+low_group.size()+high_group.size()==size);
     return this->size;
+}
+
+StupidArr<Contestant*> ContestantTree::getArrById() const {
+    StupidArr<Contestant*> low_arr=low_group.idTreeToArray();
+    StupidArr<Contestant*> mid_arr=mid_group.idTreeToArray();
+    StupidArr<Contestant*> high_arr=high_group.idTreeToArray();
+    StupidArr<Contestant*> temp = mergeArrays(low_arr,mid_arr,ContestantIDComparator());
+    StupidArr<Contestant*> result = mergeArrays(temp,high_arr,ContestantIDComparator());
+    delete[] temp.arr;
+    delete[] low_arr.arr;
+    delete[] mid_arr.arr;
+    delete[] high_arr.arr;
+    return result;
+}
+
+StupidArr<Contestant*> ContestantTree::getArrByStrength() const {
+    StupidArr<Contestant*> low_arr=low_group.strengthTreeToArray();
+    StupidArr<Contestant*> mid_arr=mid_group.strengthTreeToArray();
+    StupidArr<Contestant*> high_arr=high_group.strengthTreeToArray();
+    StupidArr<Contestant*> temp = mergeArrays(low_arr,mid_arr,ContestantStrengthComparator());
+    StupidArr<Contestant*> result = mergeArrays(temp,high_arr,ContestantStrengthComparator());
+    delete[] temp.arr;
+    delete[] low_arr.arr;
+    delete[] mid_arr.arr;
+    delete[] high_arr.arr;
+    return result;
+}
+
+void ContestantTree::uniteWith(ContestantTree &other) {
+    StupidArr<Contestant*> this_id_arr = getArrById();
+    StupidArr<Contestant*> other_id_arr = other.getArrById();
+    StupidArr<Contestant*> this_strength_arr = getArrByStrength();
+    StupidArr<Contestant*> other_strength_arr = other.getArrByStrength();
+    StupidArr<Contestant*> id_arr = mergeArrays(this_id_arr,other_id_arr,ContestantIDComparator());
+    StupidArr<Contestant*> strength_arr = mergeArrays(this_strength_arr,other_strength_arr,ContestantStrengthComparator());
+    delete[] this_id_arr.arr;
+    delete[] other_id_arr.arr;
+    delete[] this_strength_arr.arr;
+    delete[] other_strength_arr.arr;
+    int size = id_arr.size;
+    int low_size = size/3;
+    int high_size = size/3;
+    int mid_size = size - low_size - high_size;
+    StupidArr<Contestant*> low_arr = StupidArr<Contestant*>(id_arr.arr, low_size);
+    StupidArr<Contestant*> mid_arr = StupidArr<Contestant*>(id_arr.arr+low_size, mid_size);
+    StupidArr<Contestant*> high_arr = StupidArr<Contestant*>(id_arr.arr+low_size+mid_size, high_size);
+    StupidArr<Contestant*> low_strength_arr = strengthArrFromIdArr(low_arr,strength_arr);
+    StupidArr<Contestant*> mid_strength_arr = strengthArrFromIdArr(mid_arr,strength_arr);
+    StupidArr<Contestant*> high_strength_arr = strengthArrFromIdArr(high_arr,strength_arr);
+    low_group.arrayToDoubleTree(low_arr,low_strength_arr);
+    mid_group.arrayToDoubleTree(mid_arr,mid_strength_arr);
+    high_group.arrayToDoubleTree(high_arr,high_strength_arr);
+    update_austerity();
+    update_strength();
+    size = id_arr.size;
+    //other.size = 0;
+    delete[] id_arr.arr;
+    delete[] strength_arr.arr;
+    delete[] low_strength_arr.arr;
+    delete[] mid_strength_arr.arr;
+    delete[] high_strength_arr.arr;
+}
+
+StupidArr<Contestant*> ContestantTree::strengthArrFromIdArr(StupidArr<Contestant*> id_arr, StupidArr<Contestant*> strength_arr) const {
+    StupidArr<Contestant*> result = StupidArr<Contestant*>(id_arr.size);
+    int min_id = id_arr[0]->get_ID();
+    int max_id = id_arr[id_arr.size-1]->get_ID();
+    for(int i=0, j=0; i<strength_arr.size; i++){
+        if(strength_arr[i]->get_ID()>=min_id&&strength_arr[i]->get_ID()<=max_id){
+            result[j]==strength_arr[i];
+            j++;
+            assert(j<=id_arr.size);
+        }
+    }
+    return result;
+}
+
+StupidArr<Contestant*> ContestantTree::getContestantsArr() const {
+    StupidArr<Contestant*> low_arr=low_group.idTreeToArray();
+    StupidArr<Contestant*> mid_arr=mid_group.idTreeToArray();
+    StupidArr<Contestant*> high_arr=high_group.idTreeToArray();
+    StupidArr<Contestant*> temp = mergeArrays(low_arr,mid_arr,ContestantIDComparator());
+    StupidArr<Contestant*> result = mergeArrays(temp,high_arr,ContestantIDComparator());
+    delete[] temp.arr;
+    delete[] low_arr.arr;
+    delete[] mid_arr.arr;
+    delete[] high_arr.arr;
+    return result;
 }

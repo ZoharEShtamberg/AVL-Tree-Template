@@ -17,7 +17,7 @@ public:
     void remove_player(Contestant* contestant);
     int austerity();
     int strength();
-    bool unite(Team* team);
+    void unite(Team* team);
 
 };
 

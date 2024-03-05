@@ -39,6 +39,17 @@ class DoubleTree {
 		int size() const {
 			return idTree.size();
 		}
+		StupidArr<Contestant*> idTreeToArray() const {
+			return idTree.treeToArray();
+		}
+		StupidArr<Contestant*> strengthTreeToArray() const {
+			return strengthTree.treeToArray();
+		}
+		void arrayToDoubleTree(StupidArr<Contestant*> idArr, StupidArr<Contestant*> strengthArr) {
+			idTree.arrayToTree(idArr);
+			strengthTree.arrayToTree(strengthArr);
+		}
+
 
 	private:
 		AVLTree<Contestant*, ContestantIDComparator> idTree;
