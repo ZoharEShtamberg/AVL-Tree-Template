@@ -28,7 +28,7 @@ public:
     bool is_available() const;
     bool is_in_team(int team) const;
     int teams_amount() const;
-
+    void get_teams(int* arr) const;
 	};
 
 class ContestantIDComparator{

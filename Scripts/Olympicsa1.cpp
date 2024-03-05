@@ -211,8 +211,33 @@ StatusType Olympics::remove_contestant_from_team(int teamId,int contestantId){
 
 
 StatusType Olympics::update_contestant_strength(int contestantId ,int change){
+    if(contestantId<=0){
+        return StatusType::INVALID_INPUT;
+    }
+    int teamIds[3];
+    try{
+        Contestant *contestant=O_contestants.search(contestantId);
+        if(contestant->get_strength()+change<0){
+            return StatusType::FAILURE;
+        }
+        contestant->get_teams(teamIds);
+        contestant->set_strength(contestant->get_strength()+change);
+        for (int i=0;i<3;i++){
+            if (teamIds[i]!=-1){
+                remove_contestant_from_team(teamIds[i],contestantId);
+                add_contestant_to_team(teamIds[i],contestantId);
+            }
+        }
+        contestant->set_strength(change);
+    }
+    catch(KeyDoesNotExistException &e){
+        return StatusType::FAILURE;
+    }
+    catch (std::bad_alloc&){
+        return StatusType::ALLOCATION_ERROR;
+    }
 
-	return StatusType::FAILURE;
+	return StatusType::SUCCESS;
 }
 
 output_t<int> Olympics::get_strength(int contestantId){
@@ -290,11 +315,52 @@ StatusType Olympics::unite_teams(int teamId1,int teamId2){
 }
 
 StatusType Olympics::play_match(int teamId1,int teamId2){
+    if(teamId1<=0 || teamId2<=0 || teamId1==teamId2){
+        return StatusType::INVALID_INPUT;
+    }
+    try{
+        Team *team1=O_teams.search(teamId1);
+        Team *team2=O_teams.search(teamId2);
+        if (team1->get_sport()!=team2->get_sport() ||
+            team1->country->get_ID()!=team2->country->get_ID()){
+            return StatusType::FAILURE;
+        }
+        int team1_score=team1->strength()+team1->country->get_medals();
+        int team2_score=team2->strength()+team2->country->get_medals();
+        if(team1_score>team2_score){
+            team1->country->add_medal();
+        }
+        if(team1_score<team2_score){
+            team2->country->add_medal();
+        }
+        return StatusType::SUCCESS;
+    }
+    catch (KeyDoesNotExistException&){
+        return StatusType::FAILURE;
+    }
+    catch (std::bad_alloc&){
+        return StatusType::ALLOCATION_ERROR;
+    }
 	return StatusType::FAILURE;
 }
 
 output_t<int> Olympics::austerity_measures(int teamId){
-	return 0;
+	if(teamId<=0){
+        return StatusType::INVALID_INPUT;
+    }
+    try{
+        Team *team=O_teams.search(teamId);
+        if(team->size()<3){
+            return StatusType::FAILURE;
+        }
+        return team->austerity(); //success
+    }
+    catch (KeyDoesNotExistException&){
+        return StatusType::FAILURE;
+    }
+    catch (std::bad_alloc&){
+        return StatusType::ALLOCATION_ERROR;
+    }
 }
 
 

@@ -69,3 +69,12 @@ int Contestant::teams_amount() const {
     }
     return counter;
 }
+
+void Contestant::get_teams(int* arr) const {
+    int i=0;
+    for (int team : this->teams) {
+        arr[i]=team;
+        i++;
+
+    }
+}
