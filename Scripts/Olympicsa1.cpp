@@ -20,7 +20,9 @@ Olympics::~Olympics(){
     for (int i=0;i<contestants.size;i++){
         delete contestants[i];
     }
-    
+    delete[] countries.arr;
+    delete[] teams.arr;
+    delete[] contestants.arr;
 
 }
 	
