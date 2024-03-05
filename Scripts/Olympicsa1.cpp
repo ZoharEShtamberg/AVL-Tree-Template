@@ -265,7 +265,28 @@ output_t<int> Olympics::get_team_strength(int teamId){
 
 
 StatusType Olympics::unite_teams(int teamId1,int teamId2){
-	return StatusType::FAILURE;
+    if(teamId1<=0 || teamId2<=0 || teamId1==teamId2){
+        return StatusType::INVALID_INPUT;
+    }
+    try{
+        Team *team1=O_teams.search(teamId1);
+        Team *team2=O_teams.search(teamId2);
+        if (team1->get_sport()!=team2->get_sport() ||
+            team1->country->get_ID()!=team2->country->get_ID()){
+            return StatusType::FAILURE;
+        }
+        team1->unite(team2);
+        O_teams.remove(team2);
+        team2->country->remove_team();
+        delete team2;
+    }
+    catch (KeyDoesNotExistException&){
+        return StatusType::FAILURE;
+    }
+    catch (std::bad_alloc&){
+        return StatusType::ALLOCATION_ERROR;
+    }
+	return StatusType::SUCCESS;
 }
 
 StatusType Olympics::play_match(int teamId1,int teamId2){

@@ -39,7 +39,8 @@ void Team::unite(Team* team) {
     contestants.uniteWith(team->contestants);
     StupidArr<Contestant*> arr=team->contestants.getContestantsArr();   //waste of memory, but its O(n)!
     for (int i = 0; i < arr.size; ++i) {
-        arr.arr[i]->remove_from_team(team_ID);
+        arr.arr[i]->remove_from_team(team->team_ID);
+        arr.arr[i]->add_to_team(team_ID);
     }
     delete[] arr.arr;
 }

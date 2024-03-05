@@ -17,6 +17,11 @@ int Contestant::get_ID() const {
 
 bool Contestant::add_to_team(int team) {
     for (int & i : this->teams){
+        if (i==team){
+            return false;
+        }
+    }
+    for (int & i : this->teams){
         if (i==-1){
             i=team;
             return true;
