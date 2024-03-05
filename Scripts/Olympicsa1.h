@@ -16,8 +16,8 @@
 #define STREAMINGDBA1_H_
 
 #include "wet1util.h"
-#include "Team.h"
-#include "Country.h"
+#include "../Team.h"
+#include "../Country.h"
 
 
 class Olympics {

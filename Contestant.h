@@ -2,7 +2,7 @@
 #ifndef CONTESTANT_H
 #define CONTESTANT_H
 
-#include "wet1util.h"
+#include "./Scripts/wet1util.h"
 #include "AVLTree.h"
 #include "Country.h"
 
@@ -16,9 +16,9 @@ private:
 public:
     Country *country;
     Contestant(int id, Country* country,Sport sport, int strength):contestant_ID(id),
-                                                              country(country),
                                                               sport(sport),
-                                                              strength(strength){};
+                                                              strength(strength),
+                                                              country(country){};
     int get_ID() const;
     int get_strength() const;
     void set_strength(int input);

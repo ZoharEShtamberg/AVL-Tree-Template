@@ -1,10 +1,10 @@
 #include "Olympicsa1.h"
-#include "AVLTree.h"
+#include "../AVLTree.h"
 
 
 
 Olympics::Olympics(){
-
+    //call default constructor
 }
 
 Olympics::~Olympics(){
