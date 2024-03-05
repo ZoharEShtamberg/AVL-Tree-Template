@@ -69,6 +69,8 @@ StatusType Olympics::add_team(int teamId,int countryId,Sport sport){
     if (teamId<=0 ||countryId<=0){
         return StatusType::INVALID_INPUT;
     }
+    if(O_teams.find(teamId)){
+        return StatusType::FAILURE;}
     try{
         Country *tempCountry=O_countries.search(countryId);
         Team* newTeam=new Team(teamId, tempCountry, sport);
