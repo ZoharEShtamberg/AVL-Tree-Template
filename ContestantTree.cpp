@@ -17,12 +17,49 @@ void ContestantTree::balance() {
     temp= mid_group.getMinById();
     low_group.insert(temp);
     mid_group.remove(temp);
-    update_austerity();
-    update_strength();
 }
 
 void ContestantTree::update_austerity() {
-    austerity = 1; //TODO: DO DO 21 21 21
+    if(size%3!=0||size==0||size==3){
+        austerity=0;
+        return;
+    }
+    Contestant* temp[3];
+    int maxScore = 0;
+    for(int removeFromLow = 0; removeFromLow < 3; removeFromLow++){ //ways to remove from low
+        for(int i = 0; i < removeFromLow; i++){ //remove from low
+            temp[i] = low_group.getMinByStrength();
+            remove_from_low(temp[i]);
+        }
+        for(int removeFromMid = 0; removeFromMid < 3-removeFromLow; removeFromMid++){   //ways to remove from mid
+            for(int i = 0; i < removeFromMid; i++){ //remove from mid
+                temp[i+removeFromLow] = mid_group.getMinByStrength();
+                remove_from_mid(temp[i+removeFromLow]);
+            }
+            for(int removeFromHigh = 0; removeFromHigh < 3-removeFromLow-removeFromMid; removeFromHigh++){  //ways to remove from high
+                for(int i = 0; i < removeFromHigh; i++){    //remove from high
+                    temp[i+removeFromLow+removeFromMid] = high_group.getMinByStrength();
+                    remove_from_high(temp[i+removeFromLow+removeFromMid]);
+                }
+                balance();  
+                int strength=high_group.getMaxByStrength()->get_strength()
+                                +mid_group.getMaxByStrength()->get_strength()
+                                +low_group.getMaxByStrength()->get_strength();
+                maxScore = max(maxScore, strength);
+                for(int i = 0; i < removeFromHigh; i++){    //return to high
+                    high_group.insert(temp[i+removeFromLow+removeFromMid]);
+                }
+            }
+            for(int i = 0; i < removeFromMid; i++){ //return to mid
+                mid_group.insert(temp[i+removeFromLow]);
+            }
+        }
+        for(int i = 0; i < removeFromLow; i++){ //return to low
+        low_group.insert(temp[i]);
+        }
+        balance();  //balance back
+
+    }
 }
 
 void ContestantTree::update_strength() {
@@ -44,6 +81,8 @@ void ContestantTree::insert(Contestant* contestant) {
         mid_group.insert(contestant);
         size++;
         balance();
+        update_austerity();
+        update_strength();
         return;
     }
     int id=contestant->get_ID();
@@ -69,6 +108,8 @@ void ContestantTree::insert(Contestant* contestant) {
     }
     size++;
     balance();
+    update_austerity();
+    update_strength();
 }
 void ContestantTree::remove(Contestant* contestant) {
     int id=contestant->get_ID();
@@ -88,6 +129,8 @@ void ContestantTree::remove(Contestant* contestant) {
     }
     size--;
     balance();
+    update_austerity();
+    update_strength();
 }
 
 void ContestantTree::remove_from_high(Contestant *contestant) {
