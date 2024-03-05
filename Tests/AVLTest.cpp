@@ -80,12 +80,10 @@ int main() {
 		arr[i] = i;
 	}
 	tree.arrayToTree(arr);
-	std::cout << "Size: " << tree.size() << std::endl;
-	std::cout << "Height: " << tree.getRoot()->height << std::endl;
 	CHECK
 	delete[] arr.arr;
 
-	for(int i=0;i<10000;i+=7){
+	for(int i=0;i<7000;i++){
 		try{
 			tree.remove(i);
 		}
@@ -93,7 +91,8 @@ int main() {
 		}
 	}
 	CHECK
-
+	std::cout << "Size: " << tree.size() << std::endl;
+	std::cout << "Height: " << tree.getRoot()->height << std::endl;
 	// std::cout<<"Max: "<<tree.getMax()->key<<std::endl;
 	// std::cout<<"Min: "<<tree.getMin()->key<<std::endl;
 	// std::cout<<"Size: "<<tree.size()<<std::endl;
