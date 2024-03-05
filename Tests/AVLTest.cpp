@@ -26,8 +26,6 @@ int main() {
 		}
 		CHECK
 	}
-	std::cout << "Size: " << tree.size() << std::endl;
-	std::cout << "removing" << std::endl;
 	for (int i = 99; i >= 0; i--) {
 		try {
 			tree.remove(i);
@@ -36,10 +34,6 @@ int main() {
 		}
 		CHECK
 	}
-	// std::cout<<"Max: "<<tree.getMax()->key<<std::endl;
-	// std::cout<<"Min: "<<tree.getMin()->key<<std::endl;
-	std::cout << "Size: " << tree.size() << std::endl;
-	std::cout << "adding back:" << std::endl;
 	for (int i = 1000; i >= 0; i -= 13) {
 		try {
 			tree.insert(i);
@@ -48,11 +42,6 @@ int main() {
 		}
 		CHECK
 	}
-	std::cout << "Max: " << tree.getMax()->key << std::endl;
-	std::cout << "Min: " << tree.getMin()->key << std::endl;
-	std::cout << "Size: " << tree.size() << std::endl;
-
-	std::cout << "adding some more" << std::endl;
 	for (int i = 1000; i >= 0; i -= 11) {
 		try {
 			tree.insert(i);
@@ -61,10 +50,6 @@ int main() {
 		}
 		CHECK
 	}
-	std::cout << "Max: " << tree.getMax()->key << std::endl;
-	std::cout << "Min: " << tree.getMin()->key << std::endl;
-	std::cout << "Size: " << tree.size() << std::endl;
-	std::cout << "adding some more" << std::endl;
 	for (int i = 1000; i >= 0; i -= 5) {
 		try {
 			tree.insert(i);
@@ -73,11 +58,7 @@ int main() {
 		}
 		CHECK
 	}
-	std::cout << "Max: " << tree.getMax()->key << std::endl;
-	std::cout << "Min: " << tree.getMin()->key << std::endl;
-	std::cout << "Size: " << tree.size() << std::endl;
 
-	std::cout << "adding some more" << std::endl;
 	for (int i = 0; i < 1300; i += 3) {
 		try {
 			tree.insert(i);
@@ -87,16 +68,31 @@ int main() {
 	}
 	for (int i = 0; i < 1300; i++) {
 		try {
-			std::cout << tree.search(i) << " found" << std::endl;
+			tree.search(i);
 			CHECK
 		}
 		catch (KeyDoesNotExistException& e) {
-			std::cout << i << " not found" << std::endl;
 		}
 	}
-	std::cout << "Max: " << tree.getMax()->key << std::endl;
-	std::cout << "Min: " << tree.getMin()->key << std::endl;
+
+	StupidArr<int> arr(10000);
+	for (int i = 0; i < 10000; i++) {
+		arr[i] = i;
+	}
+	tree.arrayToTree(arr);
 	std::cout << "Size: " << tree.size() << std::endl;
+	std::cout << "Height: " << tree.getRoot()->height << std::endl;
+	CHECK
+	delete[] arr.arr;
+
+	for(int i=0;i<10000;i+=7){
+		try{
+			tree.remove(i);
+		}
+		catch(std::exception& e){
+		}
+	}
+	CHECK
 
 	// std::cout<<"Max: "<<tree.getMax()->key<<std::endl;
 	// std::cout<<"Min: "<<tree.getMin()->key<<std::endl;
