@@ -8,6 +8,19 @@ Olympics::Olympics(){
 }
 
 Olympics::~Olympics(){
+    StupidArr<Country*> countries=O_countries.treeToArray();
+    StupidArr<Team*> teams=O_teams.treeToArray();
+    StupidArr<Contestant*> contestants=O_contestants.treeToArray();
+    for (int i=0;i<countries.size;i++){
+        delete countries[i];
+    }
+    for (int i=0;i<teams.size;i++){
+        delete teams[i];
+    }
+    for (int i=0;i<contestants.size;i++){
+        delete contestants[i];
+    }
+    
 
 }
 	
