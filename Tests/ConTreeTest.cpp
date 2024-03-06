@@ -141,26 +141,41 @@ int main(){
     Olympics test=Olympics();
     test.add_country(1,0);
     test.add_country(2,0);
+
     test.add_team(1,1,Sport::SWIMMING);
+    int conts[12]={1,2,3,4,10,20,30,40,100,200,300,400};
+    int powers[12]={800,700,600,500,80,70,60,50,8, 7 ,6,5};
+    for (int i = 0; i < 12; ++i) {
+        test.add_contestant(conts[i],1,Sport::SWIMMING,powers[i]);
+        test.add_contestant_to_team(1,conts[i]);
+    }
     test.add_team(2,2,Sport::SWIMMING);
-    test.add_contestant(11,1,Sport::SWIMMING,10);
-    test.add_contestant(12,1,Sport::SWIMMING,10);
-    test.add_contestant(13,1,Sport::SWIMMING,10);
-    test.add_contestant(21,2,Sport::SWIMMING,100);
-    test.add_contestant(22,2,Sport::SWIMMING,100);
-    test.add_contestant(23,2,Sport::SWIMMING,100);
-    test.add_contestant_to_team(1,11);
-    test.add_contestant_to_team(1,12);
-    test.add_contestant_to_team(1,13);
-    test.add_contestant_to_team(2,21);
-    test.add_contestant_to_team(2,22);
-    test.add_contestant_to_team(2,23);
-    if (test.get_team_strength(1).ans()==30&&test.get_team_strength(2).ans()==300){
-        printf("omgitworked");
+    int conts2[9]={103 ,102 ,101 ,13 ,12 ,11 ,7 ,6 ,5};
+    int powers2[9]={4 ,6 ,7 ,15,11 ,10 ,3 ,5 ,2};
+    for (int i = 0; i < 9; ++i) {
+        test.add_contestant(conts2[i],2,Sport::SWIMMING,powers2[i]);
+        test.add_contestant_to_team(2,conts2[i]);
     }
-    else{
-        printf("at least it ran");
+    if(test.get_team_strength(1).ans()!=888 || test.get_team_strength(2).ans()!=27){
+        printf("fail strength\n");
     }
+    test.play_match(1,2);
+    if(test.get_medals(1).ans()!=1){
+        printf("fail play match\n");
+    }
+    test.add_team(3,1,Sport::SWIMMING);
+    for (int i = 0; i < 9; ++i) {
+        test.add_contestant(conts2[i],1,Sport::SWIMMING,powers2[i]);
+        test.add_contestant_to_team(3,conts2[i]);
+    }
+    printf("austerity 1 is  %d\n",test.austerity_measures(1).ans());
+    printf("austerity 2 is %d\n",test.austerity_measures(2).ans());
+
+    test.unite_teams(1,3);
+    printf("new strength is %d\n",test.get_team_strength(1).ans());
+
+
+
     return 0;
 }
 /**

@@ -27,7 +27,91 @@ void ContestantTree::balance() {
     low_group.insert(temp);
     mid_group.remove(temp);
 }
+void rmFromGroupUtil(DoubleTree group, int amount, Contestant ** cons) {
+    if (amount == 0) {
+        return;
+    }
+    for (int i = 0; i < amount; ++i) {
+        cons[i] = group.getMinByStrength();
+        group.remove(cons[i]);
+    }
+    for (int i = 0; i < amount; ++i) {
+        group.insert(cons[i]);
+    }
 
+}
+
+void ContestantTree::insertUtil(Contestant *contestant){
+    if (size<=2){
+        mid_group.insert(contestant);
+        size++;
+        return;
+    }
+    Contestant *temp_con;
+    int contestant_id=contestant->get_ID();
+    if (contestant_id<mid_group.getMinById()->get_ID()){
+        low_group.insert(contestant);
+        temp_con=low_group.getMaxById();
+        mid_group.insert(temp_con);
+        low_group.remove(temp_con);
+    } else if(contestant_id>mid_group.getMaxById()->get_ID()){
+        high_group.insert(contestant);
+        temp_con=high_group.getMinById();
+        high_group.remove(temp_con);
+        mid_group.insert(temp_con);
+    } else{
+        mid_group.insert(contestant) ;
+    }
+    size++;
+    balance();
+}
+
+void ContestantTree::removeUtil(Contestant *contestant) {
+    int id=contestant->get_ID();
+
+    if (high_group.isInById(id)){
+        remove_from_high(contestant);
+    }
+    if (mid_group.isInById(id)){
+        remove_from_mid(contestant);
+    }
+    if (low_group.isInById(id)){
+        remove_from_low(contestant);
+    }
+    size--;
+    balance();
+}
+
+void ContestantTree::update_austerity() {
+    if (size % 3 != 0 || size == 0 || size == 3) {
+        austerity = 0;
+        return;
+    }
+    if (size == 6) {
+        austerity = calculate_strength();
+        return;
+    }
+    Contestant *temp[3];
+    int maxScore = 0;
+    for (int toRmFromLow = 0; toRmFromLow < 3; ++toRmFromLow) {
+        for (int toRmFromMid = 0; toRmFromMid < 3 - toRmFromLow; ++toRmFromMid) {
+            int  toRmFromHigh=3-toRmFromLow-toRmFromMid;
+                rmFromGroupUtil(low_group, toRmFromLow, temp);
+                rmFromGroupUtil(mid_group, toRmFromMid, &temp[toRmFromLow]);
+                rmFromGroupUtil(high_group, toRmFromHigh, &temp[toRmFromLow + toRmFromMid]);
+                for (int i = 0; i < 3; ++i) {
+                    removeUtil(temp[i]);
+                }
+                int strengthAfterRemoval = calculate_strength();
+                maxScore = max(maxScore, strengthAfterRemoval);
+                for (int i = 0; i < 3; ++i) {
+                    insertUtil(temp[i]);
+                }
+            }
+        }
+    austerity = maxScore;
+}
+/**
 void ContestantTree::update_austerity() {
     if(size%3!=0||size==0||size==3){
         austerity=0;
@@ -76,6 +160,7 @@ void ContestantTree::update_austerity() {
     austerity = maxScore;
 }
 
+**/
 void ContestantTree::update_strength() {
     strength=calculate_strength();
 }

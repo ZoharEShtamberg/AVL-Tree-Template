@@ -23,6 +23,8 @@ private:
     StupidArr<Contestant*> getArrByStrength() const;
     StupidArr<Contestant*> strengthArrFromIdArr(StupidArr<Contestant*> targetArr,
                                                          StupidArr<Contestant*> strengthArr) const;
+    void removeUtil(Contestant *contestant);
+    void insertUtil(Contestant *contestant);
 public:
     ContestantTree():size(0), austerity(0), strength(0){};
     ~ContestantTree()=default;
