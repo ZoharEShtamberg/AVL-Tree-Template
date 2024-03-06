@@ -1,0 +1,27 @@
+add_country: SUCCESS
+add_team: SUCCESS
+add_team: SUCCESS
+unite_teams: SUCCESS
+get_team_strength: SUCCESS, 0
+add_team: SUCCESS
+add_contestant: SUCCESS
+add_contestant: SUCCESS
+add_contestant: SUCCESS
+add_contestant_to_team: SUCCESS
+add_contestant_to_team: SUCCESS
+add_contestant_to_team: SUCCESS
+unite_teams: SUCCESS
+get_team_strength: SUCCESS, 15
+add_team: SUCCESS
+remove_contestant_from_team: SUCCESS
+remove_contestant_from_team: SUCCESS
+remove_contestant_from_team: SUCCESS
+add_contestant_to_team: SUCCESS
+add_contestant_to_team: SUCCESS
+add_contestant_to_team: SUCCESS
+unite_teams: SUCCESS
+get_team_strength: SUCCESS, 15
+add_team: SUCCESS
+add_contestant_to_team: SUCCESS
+unite_teams: SUCCESS
+get_team_strength: SUCCESS, 15

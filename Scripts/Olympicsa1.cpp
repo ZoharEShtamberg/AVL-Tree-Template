@@ -30,13 +30,15 @@ StatusType Olympics::add_country(int countryId, int medals){
     if (countryId<=0 || medals<0 ){
         return StatusType::INVALID_INPUT;
     }
+    Country* newCountry=nullptr;
     try{
-        Country *newCountry=new Country(countryId,medals);
+        newCountry=new Country(countryId,medals);
         O_countries.insert(newCountry);
     }catch (std::bad_alloc&){
         //TODO?
         return StatusType::ALLOCATION_ERROR;
     } catch (KeyAlreadyExistsException&) {
+        delete newCountry;
         return StatusType::FAILURE;
 
     }
@@ -69,18 +71,19 @@ StatusType Olympics::add_team(int teamId,int countryId,Sport sport){
     if (teamId<=0 ||countryId<=0){
         return StatusType::INVALID_INPUT;
     }
-    if(O_teams.find(teamId)){
-        return StatusType::FAILURE;}
+    Team* newTeam=nullptr;
     try{
         Country *tempCountry=O_countries.search(countryId);
-        Team* newTeam=new Team(teamId, tempCountry, sport);
+        newTeam=new Team(teamId, tempCountry, sport);
         O_teams.insert(newTeam);
         tempCountry->add_team();
     }
     catch (KeyDoesNotExistException&){
+        delete newTeam;
         return StatusType::FAILURE;
     }
     catch (KeyAlreadyExistsException&){
+        delete newTeam;
         return StatusType::FAILURE;
     }
     catch (std::bad_alloc&){
@@ -118,13 +121,15 @@ StatusType Olympics::add_contestant(int contestantId ,int countryId,Sport sport,
     if (contestantId<=0 ||countryId<=0 || strength<0){
         return StatusType::INVALID_INPUT;
     }
+    Contestant* newContestant=nullptr;  
     try{
         Country *tempCountry=O_countries.search(countryId);
-        Contestant *newContestant = new Contestant(contestantId,tempCountry,sport,strength);
+        newContestant = new Contestant(contestantId,tempCountry,sport,strength);
         O_contestants.insert(newContestant);
         tempCountry->add_player();
     }
     catch (KeyDoesNotExistException&){
+        delete newContestant;
         return StatusType::FAILURE;
     }
     catch (KeyAlreadyExistsException&){
