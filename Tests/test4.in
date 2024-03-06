@@ -1,0 +1,19 @@
+add_country 21 0
+add_team 69 21 1
+add_team 420 21 1
+add_contestant 1 21 1 6
+add_contestant 3 21 1 5
+add_contestant 5 21 1 4
+add_contestant 2 21 1 3
+add_contestant 4 21 1 2
+add_contestant 6 21 1 1
+add_contestant_to_team 69 1
+add_contestant_to_team 69 3
+add_contestant_to_team 69 5
+add_contestant_to_team 420 2
+add_contestant_to_team 420 4
+add_contestant_to_team 420 6
+unite_teams 69 420
+add_team 11 21 1
+unite_teams 69 11
+unite_teams 69 420
