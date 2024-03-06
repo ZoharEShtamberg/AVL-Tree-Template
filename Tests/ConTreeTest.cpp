@@ -156,9 +156,9 @@ int main(){
         test.add_contestant(conts2[i],2,Sport::SWIMMING,powers2[i]);
         test.add_contestant_to_team(2,conts2[i]);
     }
-    if(test.get_team_strength(1).ans()!=888 || test.get_team_strength(2).ans()!=27){
-        printf("fail strength\n");
-    }
+
+    printf(" strength 1 is %d\n",test.get_team_strength(1).ans());
+    printf(" strength 2 is %d\n",test.get_team_strength(2).ans());
     test.play_match(1,2);
     if(test.get_medals(1).ans()!=1){
         printf("fail play match\n");

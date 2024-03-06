@@ -27,7 +27,7 @@ void ContestantTree::balance() {
     low_group.insert(temp);
     mid_group.remove(temp);
 }
-void rmFromGroupUtil(DoubleTree group, int amount, Contestant ** cons) {
+void rmFromGroupUtil(DoubleTree& group, int amount, Contestant ** cons) {
     if (amount == 0) {
         return;
     }
