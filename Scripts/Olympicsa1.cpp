@@ -133,6 +133,7 @@ StatusType Olympics::add_contestant(int contestantId ,int countryId,Sport sport,
         return StatusType::FAILURE;
     }
     catch (KeyAlreadyExistsException&){
+        delete newContestant;
         return StatusType::FAILURE;
     }
     catch (std::bad_alloc&){
