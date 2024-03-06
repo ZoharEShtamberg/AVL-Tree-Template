@@ -203,7 +203,7 @@ StupidArr<Contestant*> ContestantTree::getArrByStrength() const {
     delete[] high_arr.arr;
     return result;
 }
-
+ 
 void ContestantTree::uniteWith(ContestantTree &other) {
     StupidArr<Contestant*> this_id_arr = getArrById();
     StupidArr<Contestant*> other_id_arr = other.getArrById();
@@ -240,14 +240,17 @@ void ContestantTree::uniteWith(ContestantTree &other) {
 }
 
 StupidArr<Contestant*> ContestantTree::strengthArrFromIdArr(StupidArr<Contestant*> id_arr, StupidArr<Contestant*> strength_arr) const {
+    if(id_arr.size==0){
+        return StupidArr<Contestant*>(0);
+    }
     StupidArr<Contestant*> result = StupidArr<Contestant*>(id_arr.size);
     int min_id = id_arr[0]->get_ID();
     int max_id = id_arr[id_arr.size-1]->get_ID();
-    for(int i=0, j=0; i<strength_arr.size; i++){
-        if(strength_arr[i]->get_ID()>=min_id&&strength_arr[i]->get_ID()<=max_id){
+    for(int i=0, j=0; i<strength_arr.size/* && j < id_arr.size*/; i++){
+        if(strength_arr[i]->get_ID()>=min_id && strength_arr[i]->get_ID()<=max_id/* && j < id_arr.size*/){
+            assert(j<result.size);
             result[j]=strength_arr[i];
             j++;
-            assert(j<=id_arr.size);
         }
     }
     return result;
