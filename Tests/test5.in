@@ -25,3 +25,4 @@ add_contestant_to_team 11 200
 add_contestant_to_team 11 300
 add_contestant_to_team 11 400
 get_team_strength 11
+austerity_measures 11

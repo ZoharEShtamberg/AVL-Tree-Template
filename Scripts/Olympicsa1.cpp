@@ -230,10 +230,14 @@ StatusType Olympics::update_contestant_strength(int contestantId ,int change){
             return StatusType::FAILURE;
         }
         contestant->get_teams(teamIds);
-        contestant->set_strength(contestant->get_strength()+change);
         for (int i=0;i<3;i++){
             if (teamIds[i]!=-1){
                 remove_contestant_from_team(teamIds[i],contestantId);
+            }
+        }
+        contestant->set_strength(contestant->get_strength()+change);
+        for (int i=0;i<3;i++){
+            if (teamIds[i]!=-1){
                 add_contestant_to_team(teamIds[i],contestantId);
             }
         }

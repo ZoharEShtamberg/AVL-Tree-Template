@@ -100,8 +100,8 @@ void ContestantTree::update_austerity() {
         for (int toRmFromMid = 0; toRmFromMid <= 3 - toRmFromLow; ++toRmFromMid) {
             int  toRmFromHigh=3-toRmFromLow-toRmFromMid;
                 rmFromGroupUtil(low_group, toRmFromLow, temp);
-                rmFromGroupUtil(mid_group, toRmFromMid, &temp[toRmFromLow]);
-                rmFromGroupUtil(high_group, toRmFromHigh, &temp[toRmFromLow + toRmFromMid]);
+                rmFromGroupUtil(mid_group, toRmFromMid, temp + toRmFromLow);
+                rmFromGroupUtil(high_group, toRmFromHigh, temp + toRmFromLow + toRmFromMid);
                 for (int i = 0; i < 3; ++i) {
                     removeUtil(temp[i]);
                 }
@@ -201,9 +201,10 @@ void ContestantTree::remove_from_high(Contestant *contestant) {
 
 void ContestantTree::remove_from_mid(Contestant *contestant) { // moves max of low and min of high to mid so that balance works
     mid_group.remove(contestant);
-    if (low_group.size()==0){
+    if (low_group.size()==0 || mid_group.size()>=low_group.size()){
         return;
     }
+
     Contestant *temp = low_group.getMaxById();
     mid_group.insert(temp);
     low_group.remove(temp);
