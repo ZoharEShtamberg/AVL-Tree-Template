@@ -236,7 +236,6 @@ StatusType Olympics::update_contestant_strength(int contestantId ,int change){
                 add_contestant_to_team(teamIds[i],contestantId);
             }
         }
-        contestant->set_strength(change);
     }
     catch(KeyDoesNotExistException &e){
         return StatusType::FAILURE;

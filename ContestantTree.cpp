@@ -16,18 +16,18 @@ int ContestantTree::calculate_strength() const {
 }
 
 void ContestantTree::balance() {
-    if (size%3 != 0 || size==0){
+    if (size%3 != 0 || size==0|| (low_group.size()==mid_group.size()&&mid_group.size()==high_group.size())){
         return;
     }
     //when we get here we balance back by removing from mid 2 correct elements to low and high
     Contestant *temp = mid_group.getMaxById();
-    high_group.insert(temp);
-    mid_group.remove(temp);
-    temp= mid_group.getMinById();
-    low_group.insert(temp);
-    mid_group.remove(temp);
+        high_group.insert(temp);
+        mid_group.remove(temp);
+        temp= mid_group.getMinById();
+        low_group.insert(temp);
+        mid_group.remove(temp);
 }
-void rmFromGroupUtil(DoubleTree& group, int amount, Contestant ** cons) {
+void rmFromGroupUtil(DoubleTree& group, int amount, Contestant **cons) {
     if (amount == 0) {
         return;
     }
@@ -178,8 +178,8 @@ void ContestantTree::insert(Contestant* contestant) {
         mid_group.insert(contestant);
         size++;
         balance();
-        update_austerity();
         update_strength();
+        update_austerity();
         return;
     }
     int id=contestant->get_ID();
@@ -205,8 +205,9 @@ void ContestantTree::insert(Contestant* contestant) {
     }
     size++;
     balance();
-    update_austerity();
     update_strength();
+    update_austerity();
+
 }
 void ContestantTree::remove(Contestant* contestant) {
     int id=contestant->get_ID();
@@ -226,15 +227,22 @@ void ContestantTree::remove(Contestant* contestant) {
     }
     size--;
     balance();
-    update_austerity();
     update_strength();
+    update_austerity();
 }
 
 void ContestantTree::remove_from_high(Contestant *contestant) {
     high_group.remove(contestant);
-    Contestant *temp = low_group.getMaxById();
-    mid_group.insert(temp);
-    low_group.remove(temp);
+    if (mid_group.size()-high_group.size()==1){
+        Contestant *temp = low_group.getMaxById();
+        mid_group.insert(temp);
+        low_group.remove(temp);
+    }else{
+        Contestant *temp = mid_group.getMaxById();
+        high_group.insert(temp);
+        mid_group.remove(temp);
+    }
+
 }
 
 void ContestantTree::remove_from_mid(Contestant *contestant) { // moves max of low and min of high to mid so that balance works
@@ -252,9 +260,16 @@ void ContestantTree::remove_from_mid(Contestant *contestant) { // moves max of l
 
 void ContestantTree::remove_from_low(Contestant *contestant) {
     low_group.remove(contestant);
-    Contestant *temp = high_group.getMinById();
-    mid_group.insert(temp);
-    high_group.remove(temp);
+    if (mid_group.size()-low_group.size()==1){
+        Contestant *temp = high_group.getMinById();
+        mid_group.insert(temp);
+        high_group.remove(temp);
+    }
+    else {
+        Contestant *temp = mid_group.getMinById();
+        low_group.insert(temp);
+        mid_group.remove(temp);
+    }
 
 }
 

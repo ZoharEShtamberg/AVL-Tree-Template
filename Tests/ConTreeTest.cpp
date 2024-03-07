@@ -169,13 +169,18 @@ int main(){
         test.add_contestant_to_team(3,conts2[i]);
     }
     printf("austerity 1 is  %d\n",test.austerity_measures(1).ans());
+    printf(" strength 1 is %d\n",test.get_team_strength(1).ans());
+
     printf("austerity 2 is %d\n",test.austerity_measures(2).ans());
+    printf(" strength 2 is %d\n",test.get_team_strength(1).ans());
 
     test.unite_teams(1,3);
     printf("new strength is %d\n",test.get_team_strength(1).ans());
 
+    if (test.get_team_strength(3).status()==StatusType::FAILURE){
+        printf("successful delete team\n");
 
-
+    }
     return 0;
 }
 /**
