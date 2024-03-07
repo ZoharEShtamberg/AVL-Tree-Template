@@ -6,7 +6,7 @@ NC='\033[0m' # No Color
 output="log.txt"
 
 
-for i in {1..6}
+for i in {1..8}
 do
    # execute the prog and putting output to out file
    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ../olympics <test$i.in >out$i.res 2>${output}
