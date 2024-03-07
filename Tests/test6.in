@@ -1,0 +1,24 @@
+add_country 1 0
+add_contestant 10 1 1 10
+add_contestant 11 1 1 11
+add_contestant 12 1 1 12
+add_contestant 13 1 1 13
+add_contestant 14 1 1 14
+add_contestant 15 1 1 15
+add_contestant 16 1 1 16
+add_contestant 17 1 1 17
+add_contestant 18 1 1 18
+add_contestant 19 1 1 19
+add_contestant 20 1 1 20
+add_contestant 10 1 1 10
+remove_contestant 10
+remove_contestant 11
+remove_contestant 12
+remove_contestant 13
+remove_contestant 14
+remove_contestant 15
+remove_contestant 16
+remove_contestant 17
+remove_contestant 18
+remove_contestant 19
+remove_contestant 20

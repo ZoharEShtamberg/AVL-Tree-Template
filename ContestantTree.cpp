@@ -88,7 +88,10 @@ void ContestantTree::update_austerity() {
         return;
     }
     if (size == 6) {
-        austerity = calculate_strength();
+        //find the 3 strongest contestants and return the sum of their strengths
+        StupidArr<Contestant *> arr = getArrByStrength();
+        austerity = arr[3]->get_strength() + arr[4]->get_strength() + arr[5]->get_strength();
+        delete[] arr.arr;
         return;
     }
     Contestant *temp[3];
@@ -111,58 +114,9 @@ void ContestantTree::update_austerity() {
         }
     austerity = maxScore;
 }
-/**
-void ContestantTree::update_austerity() {
-    if(size%3!=0||size==0||size==3){
-        austerity=0;
-        return;
-    }
-    if(size==6){
-        austerity = calculate_strength();
-        return;
-    }
-    Contestant* temp[3];
-    int maxScore = 0;
-    for(int removeFromLow = 0; removeFromLow < 3; removeFromLow++){ //ways to remove from low
-        for(int i = 0; i < removeFromLow; i++){ //remove from low
-            temp[i] = low_group.getMinByStrength();
-            remove_from_low(temp[i]);
-        }
-        for(int removeFromMid = 0; removeFromMid < 3-removeFromLow; removeFromMid++){   //ways to remove from mid
-            for(int i = 0; i < removeFromMid; i++){ //remove from mid
-                assert(i+removeFromLow<3);
-                temp[i+removeFromLow] = mid_group.getMinByStrength();
-                remove_from_mid(temp[i+removeFromLow]);
-            }
-            int removeFromHigh = 3-removeFromLow-removeFromMid; //left to remove from high
-            for(int i = 0; i < removeFromHigh; i++){    //remove from high
-                assert(i+removeFromLow+removeFromMid<3);
-                temp[i+removeFromLow+removeFromMid] = high_group.getMinByStrength();
-                remove_from_high(temp[i+removeFromLow+removeFromMid]);
-            }
-            balance();  //we removed 3 contestants, we need to balance back
-            int strengthAfterRemoval=calculate_strength();  
 
-            maxScore = max(maxScore, strengthAfterRemoval);
-            for(int i = 0; i < removeFromHigh; i++){    //return to high
-                high_group.insert(temp[i+removeFromLow+removeFromMid]);
-            }
-            for(int i = 0; i < removeFromMid; i++){ //return to mid
-                mid_group.insert(temp[i+removeFromLow]);
-            }
-        }
-        for(int i = 0; i < removeFromLow; i++){ //return to low
-        low_group.insert(temp[i]);
-        }
-        balance();  //balance back
-
-    }
-    austerity = maxScore;
-}
-
-**/
 void ContestantTree::update_strength() {
-    strength=calculate_strength();
+    strength = size%3!=0 ? 0 : calculate_strength();
 }
 
 int ContestantTree::get_strength() const {
@@ -315,10 +269,10 @@ void ContestantTree::uniteWith(ContestantTree &other) {
     delete[] other_id_arr.arr;
     delete[] this_strength_arr.arr;
     delete[] other_strength_arr.arr;
-    int size = id_arr.size;
-    int low_size = size/3;
-    int high_size = size/3;
-    int mid_size = size - low_size - high_size;
+    int newSize = id_arr.size;
+    int low_size = newSize/3;
+    int high_size = newSize/3;
+    int mid_size = newSize - low_size - high_size;
     StupidArr<Contestant*> low_arr = StupidArr<Contestant*>(id_arr.arr, low_size);
     StupidArr<Contestant*> mid_arr = StupidArr<Contestant*>(id_arr.arr+low_size, mid_size);
     StupidArr<Contestant*> high_arr = StupidArr<Contestant*>(id_arr.arr+low_size+mid_size, high_size);
@@ -328,9 +282,10 @@ void ContestantTree::uniteWith(ContestantTree &other) {
     low_group.arrayToDoubleTree(low_arr,low_strength_arr);
     mid_group.arrayToDoubleTree(mid_arr,mid_strength_arr);
     high_group.arrayToDoubleTree(high_arr,high_strength_arr);
+    this->size = id_arr.size;
     update_austerity();
     update_strength();
-    size = id_arr.size;
+    
     //other.size = 0;
     delete[] id_arr.arr;
     delete[] strength_arr.arr;
