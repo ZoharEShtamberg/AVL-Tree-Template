@@ -27,3 +27,5 @@ add_contestant_to_team 11 300
 add_contestant_to_team 11 400
 update_contestant_strength 1 -200
 get_team_strength 11
+update_contestant_strength 1 200
+get_team_strength 11

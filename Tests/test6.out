@@ -26,3 +26,5 @@ add_contestant_to_team: SUCCESS
 add_contestant_to_team: SUCCESS
 update_contestant_strength: SUCCESS
 get_team_strength: SUCCESS, 788
+update_contestant_strength: SUCCESS
+get_team_strength: SUCCESS, 888
