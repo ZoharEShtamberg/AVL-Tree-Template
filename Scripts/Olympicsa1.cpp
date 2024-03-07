@@ -129,7 +129,7 @@ StatusType Olympics::add_contestant(int contestantId ,int countryId,Sport sport,
         tempCountry->add_player();
     }
     catch (KeyDoesNotExistException&){
-        delete newContestant;
+        //delete newContestant; //i think this is redundant
         return StatusType::FAILURE;
     }
     catch (KeyAlreadyExistsException&){
@@ -154,6 +154,7 @@ StatusType Olympics::remove_contestant(int contestantId){
         }
         O_contestants.remove(contestantToDelete);
         contestantToDelete->country->remove_player();
+        delete contestantToDelete;  //its called contestantToDelete. why tf didn't we delete it
     }
     catch (std::bad_alloc&){
         return StatusType::ALLOCATION_ERROR;
@@ -179,7 +180,7 @@ StatusType Olympics::add_contestant_to_team(int teamId,int contestantId){
         return StatusType::FAILURE;
     }
     team->add_player(new_contestant);
-         new_contestant->add_to_team(teamId);
+    new_contestant->add_to_team(teamId);
     }
      catch (KeyDoesNotExistException&){
         return StatusType::FAILURE;

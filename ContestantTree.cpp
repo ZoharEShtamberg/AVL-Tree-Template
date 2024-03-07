@@ -93,8 +93,8 @@ void ContestantTree::update_austerity() {
     }
     Contestant *temp[3];
     int maxScore = 0;
-    for (int toRmFromLow = 0; toRmFromLow < 3; ++toRmFromLow) {
-        for (int toRmFromMid = 0; toRmFromMid < 3 - toRmFromLow; ++toRmFromMid) {
+    for (int toRmFromLow = 0; toRmFromLow <= 3; ++toRmFromLow) {
+        for (int toRmFromMid = 0; toRmFromMid <= 3 - toRmFromLow; ++toRmFromMid) {
             int  toRmFromHigh=3-toRmFromLow-toRmFromMid;
                 rmFromGroupUtil(low_group, toRmFromLow, temp);
                 rmFromGroupUtil(mid_group, toRmFromMid, &temp[toRmFromLow]);

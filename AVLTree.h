@@ -224,10 +224,10 @@ typename AVLTree<T, COMP>::node* AVLTree<T, COMP>::removeUtil(AVLTree<T, COMP>::
 	if (comp(key, head->key) == LESS) {
 		head->left = removeUtil(head->left, key);
 	}
-	else if (comp(key, head->key) == GREATER) {
+	if (comp(key, head->key) == GREATER) {
 		head->right = removeUtil(head->right, key);
 	}
-	else {
+	if(comp(key, head->key) == EQUAL){
 		//key found
 		if (head->left == nullptr || head->right == nullptr) {	//node has one or no children
 			node* temp = (head->left != nullptr) ? head->left : head->right;
